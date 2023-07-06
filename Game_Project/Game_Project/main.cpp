@@ -1,33 +1,43 @@
 ﻿#include <SFML/Graphics.hpp>
 
+float UpdateLeft(float currentPlayerPositionX)
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+        currentPlayerPositionX -= 1.0f;
+    }
+    else
+    {
+        return currentPlayerPositionX;
+    }
+}
+
+float UpdateRight(float currentPlayerPositionX)
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        currentPlayerPositionX += 1.0f;
+    }
+    else
+    {
+        return currentPlayerPositionX;
+    }
+}
+
 int main()
 {
     int screenWidth = 800;
     int screenHeight = 450;
 
-    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "02_Array_Loop_Condition");
+    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "03_Function");
+    window.setFramerateLimit(60);
 
-    const int numRect = 30;
-    sf::RectangleShape rects[numRect];
-
-    float rectWidth = 20.0f;
-    float rectHeight = 20.0f;
-
-    for (int i = 0; i < numRect; i++)
-    {
-        float randomX = rand() % screenWidth;
-        float randomY = rand() % screenHeight;
-
-        unsigned int randomR = rand() % 255;
-        unsigned int randomG = rand() % 255;
-        unsigned int randomB = rand() % 255;
-
-        sf::Color randomColor = sf::Color(randomR, randomG, randomB);
-
-        rects[i] = sf::RectangleShape(sf::Vector2f{ rectWidth, rectHeight });
-        rects[i].setFillColor(randomColor);
-        rects[i].setPosition(sf::Vector2f{ randomX, randomY });
-    }
+    float playerPositionX = 10.0f;
+    float playerPositionY = 10.0f;
+    const float playerSize = 20.0f;
+    const sf::Color playerColor = sf::Color{ 238, 108, 77, 255 };
+    sf::RectangleShape player = sf::RectangleShape{ sf::Vector2f{playerSize, playerSize} };
+    player.setFillColor(playerColor);
 
     while (window.isOpen())
     {
@@ -38,21 +48,17 @@ int main()
                 window.close();
         }
 
-        for (int i = 0; i < numRect; i++)
-        {
-            sf::Vector2f pos = rects[i].getPosition();
-            pos.x += 0.005f;
+        // Logic Update
+        playerPositionX = UpdateLeft(playerPositionX);
+        playerPositionX = UpdateRight(playerPositionX);
 
-            rects[i].setPosition(pos);
-        }
+        player.setPosition(sf::Vector2f{ playerPositionX, playerPositionY });
 
+        // Draw Objects
         window.clear();
-
-        for (int i = 0; i < numRect; i++)
         {
-            window.draw(rects[i]);
+            window.draw(player);
         }
-
         window.display();
     }
 
@@ -61,6 +67,7 @@ int main()
 
 //--- Practice
 
-// 1. 각 사각형의 크기도 랜덤하게 생성되도록 코드를 수정해 보세요.
-// 2. 모든 사각형의 이동속도가 동일합니다. 각 사각형이 서로 다른 이동속도를 가지도록 수정해 보세요.
-// 3. 사각형이 오른쪽 끝에 부딪히면 반대 방향으로 움직이도록 수정해 보세요.
+// 1. W,S 키로 플레이어가 위아래로도 움직일 수 있도록 수정해 보세요.
+// 2. 플레이어의 속도가 너무 느린 것 같습니다. 속도를 더 빠르게 바꾸어 보세요. 효율적으로 하기 위해 playerSpeed 변수를 선언해서 구현해 보세요.
+// 3. W,S키를 사용하게 되어서 함수가 4개나 되었습니다. 포인터 또는 참조자를 사용해서 모든 움직임을 하나의 함수에서 처리할 수 있도록 시도해 보세요.
+// 4. 마우스 입력은 어떻게 처리하는걸까요? 스스로 한 번 찾아보세요!
