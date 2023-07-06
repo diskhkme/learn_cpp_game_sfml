@@ -1,33 +1,22 @@
 ﻿#include <SFML/Graphics.hpp>
-#include <iostream>
 
 int main()
 {
-    // 화면을 그릴 윈도우 생성
-    sf::RenderWindow window(sf::VideoMode(1024, 768), "SFML works!");
+    int screenWidth = 800;
+    int screenHeight = 450;
 
-    // 글을 표시하고 싶을 경우 폰트 로딩 필요
-    sf::Font font;
-    if (!font.loadFromFile("../resources/font/arial.ttf"))
-    {
-        std::cout << "Font Loading Error!" << std::endl;
-    }
+    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "01_Variable");
 
-    // 화면에 그릴 원 객체 생성
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    float rectPositionX = 10;
+    float rectPositionY = 50;
+    float rectWidth = 20.0f;
+    float rectHeight = 10.0f;
 
-    // 화면에 그릴 텍스트 객체 생성
-    sf::Text text;
-    text.setFont(font);
-    text.setString("Hello SFML!");
-    text.setCharacterSize(24);
-    text.setFillColor(sf::Color::White);
+    sf::RectangleShape rect(sf::Vector2f{ rectWidth, rectHeight });
+    rect.setFillColor(sf::Color{ 238,108,77,255 });
 
-    // 윈도우가 열려 있을 동안 반복
     while (window.isOpen())
     {
-        // 종료 조건
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -35,16 +24,11 @@ int main()
                 window.close();
         }
 
-        //--- 화면을 그리는 세 단계
+        rectPositionX += 0.05f;
+        rect.setPosition(rectPositionX, rectPositionY);
 
-        // 1) 이미 그려져 있는 모든 것을 지운다.
-        window.clear(); 
-
-        // 2) 그리고 싶은 것들을 draw 함수를 사용해 그린다.
-        window.draw(shape);
-        window.draw(text);
-
-        // 3) 화면에 표시한다.
+        window.clear();
+        window.draw(rect);
         window.display();
     }
 
@@ -53,6 +37,6 @@ int main()
 
 //--- Practice
 
-// 1. 화면의 크기를 더 크게, 또는 더 작게 만들어 보세요.
-// 2. 원을 화면의 다른 위치에, 다른 크기로 만들어 보세요.
-// 3. 원 개신 사각형을 화면에 그려 보세요. (https://www.sfml-dev.org/documentation/2.6.0/classsf_1_1RectangleShape.php)
+// 1. 사각형의 이동 속도를 더 증가시켜보세요.
+// 2. 사각형의 이동 방향을 바꿔 보세요. 예를들어 오른쪽 아래로 이동하도록 해 보세요.
+// 3. 사각형이 화면 끝까지 가면 사라져버립니다. 이럴 경우 화면 왼쪽에서 다시 나타나도록 코드를 수정해 보세요.
