@@ -11,40 +11,40 @@
 
 #include <SFML/Graphics.hpp>
 
-void UpdatePlayerPosition(float& playerPositionX, float& playerPositionY)
+void UpdatePlayerPosition(sf::Vector2f& playerPosition)
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-        playerPositionX -= 1.0f;
+        playerPosition.x -= 1.0f;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        playerPositionX += 1.0f;
+        playerPosition.x += 1.0f;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-        playerPositionY -= 1.0f;
+        playerPosition.y -= 1.0f;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        playerPositionY += 1.0f;
+        playerPosition.y += 1.0f;
     }
 }
 
-void UpdateEnemiesPosition(float enemySpeed, float* enemyPositionX, float* enemyPositionY, int enemyCount, float playerPositionX, float playerPositionY)
+void UpdateEnemiesPosition(float enemySpeed, sf::Vector2f* enemyPositions, int enemyCount, sf::Vector2f playerPosition)
 {
     for (int i = 0; i < enemyCount; i++)
     {
-        float enemyToPlayerX = playerPositionX - enemyPositionX[i];
-        float enemyToPlayerY = playerPositionY - enemyPositionY[i];
+        float enemyToPlayerX = playerPosition.x - enemyPositions[i].x;
+        float enemyToPlayerY = playerPosition.y - enemyPositions[i].y;
 
         float length = sqrt(enemyToPlayerX * enemyToPlayerX + enemyToPlayerY * enemyToPlayerY);
 
         enemyToPlayerX /= length;
         enemyToPlayerY /= length;
 
-        enemyPositionX[i] += enemyToPlayerX * enemySpeed;
-        enemyPositionY[i] += enemyToPlayerY * enemySpeed;
+        enemyPositions[i].x += enemyToPlayerX * enemySpeed;
+        enemyPositions[i].y += enemyToPlayerY * enemySpeed;
     }
 
 }
@@ -62,8 +62,7 @@ int main()
         window.setFramerateLimit(60);
 
         // Player
-        float playerPositionX = 10.0f;
-        float playerPositionY = 10.0f;
+        sf::Vector2f playerPosition = sf::Vector2f{ 10.0f, 10.0f };
         const float playerSize = 20.0f;
         const sf::Color playerColor = sf::Color{ 238, 108, 77, 255 };
         sf::RectangleShape player = sf::RectangleShape{ sf::Vector2f{playerSize, playerSize} };
@@ -72,15 +71,14 @@ int main()
         // Enemies
         const int enemyCount = 10;
         float enemySpeed = 1.0f;
-        float* enemyPositionX = new float[enemyCount]; // DBG_NEW 사용 고려
-        float* enemyPositionY = new float[enemyCount];
+        sf::Vector2f* enemyPositions = new sf::Vector2f[enemyCount];
         const float enemySize = 10.0f;
         const sf::Color enemyColor = sf::Color{ 200, 150, 255, 255 };
         sf::CircleShape enemies[enemyCount];
         for (int i = 0; i < enemyCount; i++)
         {
-            enemyPositionX[i] = screenWidth - 100;
-            enemyPositionY[i] = rand() % screenHeight;
+            enemyPositions[i].x = screenWidth - 100;
+            enemyPositions[i].y = rand() % screenHeight;
 
             enemies[i] = sf::CircleShape{ enemySize };
             enemies[i].setFillColor(enemyColor);
@@ -98,13 +96,14 @@ int main()
             }
 
             // Logic Update
-            UpdatePlayerPosition(playerPositionX, playerPositionY);
-            player.setPosition(sf::Vector2f{ playerPositionX, playerPositionY });
+            UpdatePlayerPosition(playerPosition);
 
-            UpdateEnemiesPosition(enemySpeed, enemyPositionX, enemyPositionY, enemyCount, playerPositionX, playerPositionY);
+            player.setPosition(playerPosition);
+
+            UpdateEnemiesPosition(enemySpeed, enemyPositions, enemyCount, playerPosition);
             for (int i = 0; i < enemyCount; i++)
             {
-                enemies[i].setPosition(sf::Vector2f{ enemyPositionX[i], enemyPositionY[i] });
+                enemies[i].setPosition(enemyPositions[i]);
             }
 
             // Draw Objects
@@ -121,8 +120,7 @@ int main()
             window.display();
         }
 
-        delete[] enemyPositionX;
-        delete[] enemyPositionY;
+        delete[] enemyPositions;
     }
     
     return 0;
@@ -130,5 +128,4 @@ int main()
 
 //--- Practice
 
-// 1. 각 Update...() 함수 안에서, setPosition() 함수
-// 2. enemies 배열도 동적 할당된 배열로 수정해 보세요.
+// 1. 
