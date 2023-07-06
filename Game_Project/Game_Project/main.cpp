@@ -5,15 +5,29 @@ int main()
     int screenWidth = 800;
     int screenHeight = 450;
 
-    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "01_Variable");
+    sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "02_Array_Loop_Condition");
 
-    float rectPositionX = 10;
-    float rectPositionY = 50;
+    const int numRect = 30;
+    sf::RectangleShape rects[numRect];
+
     float rectWidth = 20.0f;
-    float rectHeight = 10.0f;
+    float rectHeight = 20.0f;
 
-    sf::RectangleShape rect(sf::Vector2f{ rectWidth, rectHeight });
-    rect.setFillColor(sf::Color{ 238,108,77,255 });
+    for (int i = 0; i < numRect; i++)
+    {
+        float randomX = rand() % screenWidth;
+        float randomY = rand() % screenHeight;
+
+        unsigned int randomR = rand() % 255;
+        unsigned int randomG = rand() % 255;
+        unsigned int randomB = rand() % 255;
+
+        sf::Color randomColor = sf::Color(randomR, randomG, randomB);
+
+        rects[i] = sf::RectangleShape(sf::Vector2f{ rectWidth, rectHeight });
+        rects[i].setFillColor(randomColor);
+        rects[i].setPosition(sf::Vector2f{ randomX, randomY });
+    }
 
     while (window.isOpen())
     {
@@ -24,11 +38,21 @@ int main()
                 window.close();
         }
 
-        rectPositionX += 0.05f;
-        rect.setPosition(rectPositionX, rectPositionY);
+        for (int i = 0; i < numRect; i++)
+        {
+            sf::Vector2f pos = rects[i].getPosition();
+            pos.x += 0.005f;
+
+            rects[i].setPosition(pos);
+        }
 
         window.clear();
-        window.draw(rect);
+
+        for (int i = 0; i < numRect; i++)
+        {
+            window.draw(rects[i]);
+        }
+
         window.display();
     }
 
@@ -37,6 +61,6 @@ int main()
 
 //--- Practice
 
-// 1. 사각형의 이동 속도를 더 증가시켜보세요.
-// 2. 사각형의 이동 방향을 바꿔 보세요. 예를들어 오른쪽 아래로 이동하도록 해 보세요.
-// 3. 사각형이 화면 끝까지 가면 사라져버립니다. 이럴 경우 화면 왼쪽에서 다시 나타나도록 코드를 수정해 보세요.
+// 1. 각 사각형의 크기도 랜덤하게 생성되도록 코드를 수정해 보세요.
+// 2. 모든 사각형의 이동속도가 동일합니다. 각 사각형이 서로 다른 이동속도를 가지도록 수정해 보세요.
+// 3. 사각형이 오른쪽 끝에 부딪히면 반대 방향으로 움직이도록 수정해 보세요.
