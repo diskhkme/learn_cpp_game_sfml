@@ -12,7 +12,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Enemy.h"
-#include "Bullet.h"
+#include "Weapon.h"
 
 int main()
 {
@@ -39,13 +39,8 @@ int main()
             enemies[i] = Enemy{ enemyInitPosition , 10.0f, enemyColor, 100.0f, &player };
         }
 
-        // Bullets
-        const int bulletMaxCount = 50;
-        Bullet* bullets = new Bullet[bulletMaxCount];
-        int currentBulletCount = 0;
-        float bulletFireRateSecond = 1.0f;
-        float bulletFireTimer = bulletFireRateSecond;
-        const sf::Color bulletColor = sf::Color{ 0, 255, 0, 255 };
+        // Weapon (Bullet 생성)
+        Weapon weapon = Weapon{ player, 1.0f, 50 };
 
         sf::Clock deltaClock;
         while (window.isOpen())
@@ -60,25 +55,12 @@ int main()
             float dt = deltaClock.restart().asSeconds();
 
             // Logic Update
-
-            // Fire bullet
-            bulletFireTimer -= dt;
-            if (bulletFireTimer < 0.0f)
-            {
-                bulletFireTimer = bulletFireRateSecond;
-                bullets[currentBulletCount] = Bullet{ player.getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  500.0f };
-                currentBulletCount++;
-            }
-
             player.Update(dt);
             for (int i = 0; i < enemyCount; i++)
             {
                 enemies[i].Update(dt);
             }
-            for (int i = 0; i < currentBulletCount; i++)
-            {
-                bullets[i].Update(dt);
-            }
+            weapon.Update(dt);
 
             // Draw Objects
             window.clear();
@@ -89,17 +71,14 @@ int main()
                 {
                     enemies[i].Draw(window);
                 }
-                for (int i = 0; i < currentBulletCount; i++)
-                {
-                    bullets[i].Draw(window);
-                }
+                
+                weapon.Draw(window);
 
             }
             window.display();
         }
 
         delete[] enemies;
-        delete[] bullets;
     }
     
     return 0;
