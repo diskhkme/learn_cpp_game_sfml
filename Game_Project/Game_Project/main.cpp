@@ -40,7 +40,9 @@ int main()
         }
 
         // Weapon (Bullet 생성)
-        Weapon weapon = Weapon{ player, 1.0f, 50 , enemies, enemyCount};
+        const int maxBullet = 50;
+        Bullet* bullets = new Bullet[maxBullet];
+        Weapon weapon = Weapon{ bullets, maxBullet, player, 1.0f, enemies, enemyCount};
 
         sf::Clock deltaClock;
         while (window.isOpen())
@@ -79,6 +81,7 @@ int main()
         }
 
         delete[] enemies;
+        delete[] bullets;
     }
     
     return 0;

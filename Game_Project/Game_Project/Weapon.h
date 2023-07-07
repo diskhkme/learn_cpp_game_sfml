@@ -7,10 +7,9 @@
 class Weapon
 {
 public:
-    Weapon(const Player& player, float fireRate, int maxCount, const Enemy* const enemies, int enemyCount)
-        : playerRef{ player }, fireRate{ fireRate }, bulletMaxCount{maxCount}, enemies{enemies}, enemyCount{enemyCount}
+    Weapon(Bullet* bullets, int maxCount, const Player& player, float fireRate,  const Enemy* const enemies, int enemyCount)
+        : bullets{ bullets }, playerRef { player }, fireRate{ fireRate }, bulletMaxCount{ maxCount }, enemies{ enemies }, enemyCount{ enemyCount }
     {
-        bullets = new Bullet[bulletMaxCount];
         currentBulletCount = 0;
         bulletFireTimer = fireRate;
 
@@ -18,11 +17,6 @@ public:
         bulletSize = 3.0f;
         bulletColor = sf::Color{ 0, 255, 0, 255 };
         bulletSpeed = 500.0f;
-    }
-
-    ~Weapon()
-    {
-        delete[] bullets;
     }
 
     void SetBulletData(float size, const sf::Color& color, float speed)
@@ -86,8 +80,8 @@ private:
     sf::Color bulletColor;
     float bulletSpeed;
 
-    int bulletMaxCount;
     Bullet* bullets;
+    int bulletMaxCount;
     int currentBulletCount;
     float bulletFireTimer;
 };
