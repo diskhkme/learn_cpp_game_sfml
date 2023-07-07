@@ -40,7 +40,7 @@ int main()
         }
 
         // Weapon (Bullet 생성)
-        Weapon weapon = Weapon{ player, 1.0f, 50 };
+        Weapon weapon = Weapon{ player, 1.0f, 50 , enemies, enemyCount};
 
         sf::Clock deltaClock;
         while (window.isOpen())
@@ -86,4 +86,5 @@ int main()
 
 //--- Practice
 
-// 
+// 1. 적이 어느 반경 안에 없을 때는 오른쪽으로 발사하도록 로직을 바꿔 보세요.
+// 2. 적이 어느 반경 안에 없을 때는 발사하지 않도록 로직을 바꿔 보세요.

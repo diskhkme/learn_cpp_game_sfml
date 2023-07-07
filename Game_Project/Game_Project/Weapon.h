@@ -2,12 +2,13 @@
 
 #include "Bullet.h"
 #include "Player.h"
+#include "MathUtil.h"
 
 class Weapon
 {
 public:
-    Weapon(const Player& player, float fireRate, int maxCount)
-        : playerRef{ player }, fireRate{ fireRate }, bulletMaxCount{maxCount}
+    Weapon(const Player& player, float fireRate, int maxCount, const Enemy* const enemies, int enemyCount)
+        : playerRef{ player }, fireRate{ fireRate }, bulletMaxCount{maxCount}, enemies{enemies}, enemyCount{enemyCount}
     {
         bullets = new Bullet[bulletMaxCount];
         currentBulletCount = 0;
@@ -38,7 +39,7 @@ public:
         if (bulletFireTimer < 0.0f)
         {
             bulletFireTimer = fireRate;
-            bullets[currentBulletCount] = Bullet{ playerRef.getPosition(), sf::Vector2f{1.0f, 0.0f}, bulletSize, bulletColor, bulletSpeed};
+            bullets[currentBulletCount] = Bullet{ playerRef.getPosition(), GetShootDirection(), bulletSize, bulletColor, bulletSpeed};
             currentBulletCount++;
         }
 
@@ -55,10 +56,31 @@ public:
             bullets[i].Draw(window);
         }
     }
+private:
+    sf::Vector2f GetShootDirection()
+    {
+        float minLength = 10000.0f;
+        int minEnemyInd = 0;
+        for (int i = 0; i < enemyCount; i++)
+        {
+            float length = GetLength(playerRef.getPosition() - enemies[i].getPosition());
+            if (length < minLength)
+            {
+                minLength = length;
+                minEnemyInd = i;
+            }
+        }
+
+        sf::Vector2f shootDir = GetNormalizedVector(enemies[minEnemyInd].getPosition() - playerRef.getPosition());
+
+        return shootDir;
+    }
 
 private:
     const Player& playerRef;
     float fireRate;
+    const Enemy* const enemies;
+    int enemyCount;
 
     float bulletSize;
     sf::Color bulletColor;
