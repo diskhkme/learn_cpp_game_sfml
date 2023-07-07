@@ -8,22 +8,23 @@
 class Weapon
 {
 public:
-    Weapon(Bullet* bullets, int maxCount, const Player* player, float fireRate,  const Enemy* const enemies, int enemyCount)
-        : bullets{ bullets }, playerRef { player }, fireRate{ fireRate }, bulletMaxCount{ maxCount }, enemies{ enemies }, enemyCount{ enemyCount }
+    Weapon(Game* game)
+        : game{game}
     {
+        bullets = game->GetBullets();
+        enemies = game->GetEnemies();
+
         currentBulletCount = 0;
         bulletFireTimer = fireRate;
 
         // default °ª
         bulletSize = 3.0f;
-        bulletColor = sf::Color{ 0, 255, 0, 255 };
         bulletSpeed = 500.0f;
     }
 
     void SetBulletData(float size, const sf::Color& color, float speed)
     {
         this->bulletSize = size;
-        this->bulletColor = color;
         this->bulletSpeed = speed;
     }
 
@@ -36,7 +37,7 @@ public:
         if (bulletFireTimer < 0.0f)
         {
             bulletFireTimer = fireRate;
-            bullets[currentBulletCount] = Bullet{ playerRef->getPosition(), GetShootDirection(), bulletSize, bulletColor, bulletSpeed};
+            bullets[currentBulletCount] = Bullet{ game, game->GetPlayer()->getPosition(), GetShootDirection()};
             currentBulletCount++;
         }
 
@@ -60,7 +61,7 @@ private:
         int minEnemyInd = 0;
         for (int i = 0; i < enemyCount; i++)
         {
-            float length = GetLength(playerRef->getPosition() - enemies[i].getPosition());
+            float length = GetLength(game->GetPlayer()->getPosition() - enemies[i].getPosition());
             if (length < minLength)
             {
                 minLength = length;
@@ -68,22 +69,22 @@ private:
             }
         }
 
-        sf::Vector2f shootDir = GetNormalizedVector(enemies[minEnemyInd].getPosition() - playerRef->getPosition());
+        sf::Vector2f shootDir = GetNormalizedVector(enemies[minEnemyInd].getPosition() - game->GetPlayer()->getPosition());
 
         return shootDir;
     }
 
 private:
-    const Player* playerRef;
+    Game* game;
+    Bullet* bullets;
+    Enemy* enemies;
+
     float fireRate;
-    const Enemy* const enemies;
     int enemyCount;
 
     float bulletSize;
-    sf::Color bulletColor;
     float bulletSpeed;
 
-    Bullet* bullets;
     int bulletMaxCount;
     int currentBulletCount;
     float bulletFireTimer;

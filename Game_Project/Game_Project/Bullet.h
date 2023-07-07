@@ -1,23 +1,26 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "Game.h"
 
 class Bullet
 {
 public:
-    Bullet(const sf::Vector2f& pos, const sf::Vector2f& direction,
-        float size, const sf::Color& color, float speed)
-        : position{ pos }, direction{ direction },
-        size{ size }, color{ color }, speed{ speed }
+    Bullet(Game *game, sf::Vector2f initPos, sf::Vector2f initDir)
+        : position{ initPos }, direction{ initDir }
     {
         shape = sf::CircleShape{ size };
         shape.setFillColor(color);
         shape.setOutlineColor(sf::Color::Green);
         shape.setOutlineThickness(0.3f);
+
+        size = 3.0f;
+        color = sf::Color{ 0,255,0,255 };
+        speed = 500.0f;
     }
 
     Bullet()
-        : Bullet{ sf::Vector2f{0,0}, sf::Vector2f{1.0f,0}, 0.3f, sf::Color{255,255,0,255}, 5.0f }
+        : Bullet{ nullptr, sf::Vector2f{0,0}, sf::Vector2f{1.0f,0} }
     {}
 
     void Update(float dt)
@@ -40,6 +43,8 @@ private:
     }
 
 private:
+    Game* game;
+
     sf::Vector2f position;
     sf::Vector2f direction;
     float speed;

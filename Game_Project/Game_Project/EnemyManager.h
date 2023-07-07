@@ -10,23 +10,24 @@ public:
 		EAST, WEST, SOUTH, NORTH
 	};
 
-	EnemyManager(const Player* player, Enemy* enemies, int maxEnemy, float spawnRate, int screenWidth, int screenHeight)
-		: playerRef{ player }, enemies {enemies	}, maxEnemy{ maxEnemy }, spawnRate{ spawnRate },
-		screenWidth{ screenWidth }, screenHeight{ screenHeight }
+	EnemyManager(Game* game)
+		: game{game}
 	{
+		spawnRate = game->GetEnemySpawnRate();
 		currentEnemyCount = 0;
 		spawnTimer = 0.0f;
+		screenWidth = game->GetScreenSize().x;
+		screenHeight = game->GetScreenSize().y;
 
 		// default 값
 		enemySize = 10.0f;
-		enemyColor = sf::Color{ 200, 150, 255, 255 };;
 		enemySpeed = 100.0f;
+		enemies = game->GetEnemies();
 	}
 
 	void SetEnemyData(float size, const sf::Color& color, float speed)
 	{
 		this->enemySize = size;
-		this->enemyColor = color;
 		this->enemySpeed = speed;
 	}
 
@@ -39,7 +40,7 @@ public:
 		if (spawnTimer < 0.0f)
 		{
 			spawnTimer = spawnRate;
-			enemies[currentEnemyCount] = Enemy{ GetRandomSpawnPosition(), enemySize, enemyColor, enemySpeed, playerRef };
+			enemies[currentEnemyCount] = Enemy{ game, GetRandomSpawnPosition() };
 			currentEnemyCount++;
 		}
 
@@ -89,8 +90,9 @@ private:
 	}
 
 private:
-	const Player* playerRef;
+	Game* game;
 	Enemy* enemies;
+
 	int maxEnemy;
 	int currentEnemyCount;
 	float spawnRate;
@@ -99,7 +101,6 @@ private:
 	int screenHeight;
 
 	float enemySize;
-	sf::Color enemyColor;
 	float enemySpeed;
 
 };

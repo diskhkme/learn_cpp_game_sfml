@@ -6,18 +6,23 @@
 class Enemy
 {
 public:
-    Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed,
-        const Player* player) // dependency injection
-        : position{ pos }, size{ size }, color{ color }, speed{ speed }, playerRef{player}
+    Enemy(Game* game, sf::Vector2f initPos)
+        : game{game}, position{initPos}
     {
-        shape = sf::CircleShape{ size };
-        shape.setFillColor(color);
-        shape.setOutlineColor(sf::Color::Red);
-        shape.setOutlineThickness(1.0f);
+        size = 3.0f;
+        speed = 200.0f;
+
+        sf::Sprite shape;
+        shape.setTexture(game->GetShipTexture());
+        shape.setTextureRect(sf::IntRect{ 40,0,8,8 });
+
+        shape.setScale(sf::Vector2f{ size,size });
+        sf::FloatRect bounds = shape.getLocalBounds();
+        shape.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
     }
 
     Enemy()
-        : Enemy{ sf::Vector2f{0,0}, 1.0f, sf::Color{255,255,0,255}, 1.0f, nullptr }
+        : Enemy{ nullptr, sf::Vector2f{0,0} }
     {}
 
     void Update(float dt)
@@ -36,7 +41,7 @@ public:
 private:
     void UpdatePosition(float dt)
     {
-        sf::Vector2f playerPosition = playerRef->getPosition();
+        sf::Vector2f playerPosition = game->GetPlayer()->getPosition();
 
         sf::Vector2f enemyToPlayer = playerPosition - position;
 
@@ -48,11 +53,11 @@ private:
     }
 
 private:
+    Game* game;
+
     sf::Vector2f position;
     float speed;
-    const Player* playerRef;
 
-    sf::CircleShape shape;
+    sf::Sprite shape;
     float size;
-    sf::Color color;
 };

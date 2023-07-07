@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Weapon.h"
 #include "EnemyManager.h"
+#include "Enemy.h"
+#include "Bullet.h"
 
 class Game
 {
@@ -16,7 +18,11 @@ public:
 	}
 	bool Initialize()
 	{
-		// Initialize SFML System
+		// Initialize Resources
+		if (!shipsTexture.loadFromFile("../resources/sprites/SpaceShooterAssetPack_Ships.png"))
+		{
+			return false;
+		}
 
 		// Initialize Game
 		InitializeGame();
@@ -42,21 +48,31 @@ public:
 		delete weapon;
 	}
 
+	sf::Texture& GetShipTexture() { return shipsTexture; }
+	sf::Vector2i GetScreenSize() { return sf::Vector2i{screenWidth,screenHeight}; }
+	Enemy* GetEnemies() { return enemies; }
+	Bullet* GetBullets() { return bullets; }
+	Player* GetPlayer() { return player; }
+
+	float GetEnemySpawnRate() { return enemySpawnRate; }
+	float GetBulletFireRate() { return bulletFireRate; }
+
 private:
 	void InitializeGame()
 	{
-		// Player
-		player = new Player{ sf::Vector2f{screenWidth / 2.0f, screenHeight / 2.0f}, 20.0f, sf::Color{238,108,77,255}, 200.0f };
+		// Player (Init을 Player 생성자 내부 로직으로 전부 변경)
+		sf::Vector2f playerInitPos = sf::Vector2f{ screenWidth/2.0f, screenHeight / 2.0f };
+		player = new Player{ this, playerInitPos };
 
 		// Enemies
 		const int maxEnemyCount = 50;
 		enemies = new Enemy[maxEnemyCount];
-		enemyManager = new EnemyManager{ player, enemies, maxEnemyCount, 1.5f, screenWidth, screenHeight };
+		enemyManager = new EnemyManager{ this };
 
 		// Weapon (Bullet 생성)
 		const int maxBullet = 50;
 		bullets = new Bullet[maxBullet];
-		weapon = new Weapon{ bullets, maxBullet, player, 1.0f, enemies, maxEnemyCount };
+		weapon = new Weapon{ this };
 
 	}
 
@@ -95,15 +111,23 @@ private:
 	}
 
 private:
+	// Window
 	int screenWidth = 800;
 	int screenHeight = 450;
 	sf::RenderWindow window{ sf::VideoMode(screenWidth, screenHeight), "CPP Game" };
 
+	// Resources
+	sf::Texture shipsTexture;
+
+	// Game data
 	Player* player;
 	Enemy* enemies;
 	EnemyManager* enemyManager;
 	Bullet* bullets;
 	Weapon* weapon;
+
+	float bulletFireRate;
+	float enemySpawnRate;
 
 	sf::Clock deltaClock;
 };
