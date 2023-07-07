@@ -12,6 +12,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Enemy.h"
+#include "Bullet.h"
 
 int main()
 {
@@ -32,11 +33,20 @@ int main()
         const int enemyCount = 10;
         Enemy* enemies = new Enemy[enemyCount];
         const sf::Color enemyColor = sf::Color{ 200, 150, 255, 255 };
-
         for (int i = 0; i < enemyCount; i++)
         {
             sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
             enemies[i] = Enemy{ enemyInitPosition , 10.0f, enemyColor, 1.0f, &player };
+        }
+
+        // Bullets
+        const int bulletCount = 50;
+        Bullet* bullets = new Bullet[bulletCount];
+        const sf::Color bulletColor = sf::Color{ 0, 255, 0, 255 };
+        for (int i = 0; i < bulletCount; i++)
+        {
+            sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
+            bullets[i] = Bullet{ player.getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  10.0f };
         }
 
         while (window.isOpen())
@@ -54,6 +64,10 @@ int main()
             {
                 enemies[i].Update();
             }
+            for (int i = 0; i < bulletCount; i++)
+            {
+                bullets[i].Update();
+            }
 
             // Draw Objects
             window.clear();
@@ -64,12 +78,17 @@ int main()
                 {
                     enemies[i].Draw(window);
                 }
+                for (int i = 0; i < bulletCount; i++)
+                {
+                    bullets[i].Draw(window);
+                }
 
             }
             window.display();
         }
 
         delete[] enemies;
+        delete[] bullets;
     }
     
     return 0;
@@ -77,10 +96,4 @@ int main()
 
 //--- Practice
 
-// 1. Enemy의 복사 생성자를 구현하고, 활용해 보세요.
-// 2. Enemy는 Player의 포인터를 가지고 있지만, 소멸자를 구현하지 않았습니다. 괜찮은 걸까요?
-// 3. Enemy 클래스를 사용함으로써 개별 객체가 다른 데이터를 가지는 경우를 처리하기가 훨씬 쉬워졌습니다.
-//    Enemy를 생성할 때 무작위 색상 또는 크기 또는 속도를 갖고록 수정해 보세요.
-//    클래스가 없을 때 이러한 작업을 하려면 코드가 얼마나 복잡해졌을 지 생각해 보세요.
-// 4. Enemy가 Player의 위치를 참조하기 위해서 내부적으로 Player의 포인터를 가지도록 했습니다.
-//    이를 참조자로 대신하려고 하면 현재 상태에서 어떤 문제가 생길까요?
+// 
