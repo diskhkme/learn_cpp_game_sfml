@@ -11,24 +11,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Player.h"
-
-void UpdateEnemiesPosition(float enemySpeed, sf::Vector2f* enemyPositions, int enemyCount, sf::Vector2f playerPosition)
-{
-    for (int i = 0; i < enemyCount; i++)
-    {
-        float enemyToPlayerX = playerPosition.x - enemyPositions[i].x;
-        float enemyToPlayerY = playerPosition.y - enemyPositions[i].y;
-
-        float length = sqrt(enemyToPlayerX * enemyToPlayerX + enemyToPlayerY * enemyToPlayerY);
-
-        enemyToPlayerX /= length;
-        enemyToPlayerY /= length;
-
-        enemyPositions[i].x += enemyToPlayerX * enemySpeed;
-        enemyPositions[i].y += enemyToPlayerY * enemySpeed;
-    }
-
-}
+#include "Enemy.h"
 
 int main()
 {
@@ -47,20 +30,13 @@ int main()
 
         // Enemies
         const int enemyCount = 10;
-        float enemySpeed = 1.0f;
-        sf::Vector2f* enemyPositions = new sf::Vector2f[enemyCount];
-        const float enemySize = 10.0f;
+        Enemy* enemies = new Enemy[enemyCount];
         const sf::Color enemyColor = sf::Color{ 200, 150, 255, 255 };
-        sf::CircleShape enemies[enemyCount];
+
         for (int i = 0; i < enemyCount; i++)
         {
-            enemyPositions[i].x = screenWidth - 100;
-            enemyPositions[i].y = rand() % screenHeight;
-
-            enemies[i] = sf::CircleShape{ enemySize };
-            enemies[i].setFillColor(enemyColor);
-            enemies[i].setOutlineColor(sf::Color::Red);
-            enemies[i].setOutlineThickness(1.0f);
+            sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
+            enemies[i] = Enemy{ enemyInitPosition , 10.0f, enemyColor, 1.0f, &player };
         }
 
         while (window.isOpen())
@@ -74,11 +50,9 @@ int main()
 
             // Logic Update
             player.Update();
-
-            UpdateEnemiesPosition(enemySpeed, enemyPositions, enemyCount, player.getPosition());
             for (int i = 0; i < enemyCount; i++)
             {
-                enemies[i].setPosition(enemyPositions[i]);
+                enemies[i].Update();
             }
 
             // Draw Objects
@@ -88,14 +62,14 @@ int main()
 
                 for (int i = 0; i < enemyCount; i++)
                 {
-                    window.draw(enemies[i]);
+                    enemies[i].Draw(window);
                 }
 
             }
             window.display();
         }
 
-        delete[] enemyPositions;
+        delete[] enemies;
     }
     
     return 0;
@@ -103,5 +77,10 @@ int main()
 
 //--- Practice
 
-// 1. 강의 자료를 참고하여 Player 클래스를 Player.h/Player.cpp 에 나누어 구현해 보세요.
-// 2. Enemy (Enemy들이 아닌 Enemy 한 객체)도 클래스화하여 구현하는 것을 시도해 보세요.
+// 1. Enemy의 복사 생성자를 구현하고, 활용해 보세요.
+// 2. Enemy는 Player의 포인터를 가지고 있지만, 소멸자를 구현하지 않았습니다. 괜찮은 걸까요?
+// 3. Enemy 클래스를 사용함으로써 개별 객체가 다른 데이터를 가지는 경우를 처리하기가 훨씬 쉬워졌습니다.
+//    Enemy를 생성할 때 무작위 색상 또는 크기 또는 속도를 갖고록 수정해 보세요.
+//    클래스가 없을 때 이러한 작업을 하려면 코드가 얼마나 복잡해졌을 지 생각해 보세요.
+// 4. Enemy가 Player의 위치를 참조하기 위해서 내부적으로 Player의 포인터를 가지도록 했습니다.
+//    이를 참조자로 대신하려고 하면 현재 상태에서 어떤 문제가 생길까요?

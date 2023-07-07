@@ -23,7 +23,7 @@ public:
         window.draw(shape);
     }
 
-    sf::Vector2f getPosition() { return position; }
+    sf::Vector2f getPosition() const { return position; }
 private:
     void ProcessInput()
     {
