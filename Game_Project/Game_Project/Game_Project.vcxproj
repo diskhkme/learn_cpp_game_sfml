@@ -137,6 +137,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Weapon.h" />

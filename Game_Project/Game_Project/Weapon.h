@@ -3,11 +3,12 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "MathUtil.h"
+#include "Enemy.h"
 
 class Weapon
 {
 public:
-    Weapon(Bullet* bullets, int maxCount, const Player& player, float fireRate,  const Enemy* const enemies, int enemyCount)
+    Weapon(Bullet* bullets, int maxCount, const Player* player, float fireRate,  const Enemy* const enemies, int enemyCount)
         : bullets{ bullets }, playerRef { player }, fireRate{ fireRate }, bulletMaxCount{ maxCount }, enemies{ enemies }, enemyCount{ enemyCount }
     {
         currentBulletCount = 0;
@@ -26,6 +27,8 @@ public:
         this->bulletSpeed = speed;
     }
 
+    int GetCurrentBulletCount() { return currentBulletCount; }
+
     // 임시. Actor 상속 후엔 바꿀 것
     void Update(float dt)
     {
@@ -33,7 +36,7 @@ public:
         if (bulletFireTimer < 0.0f)
         {
             bulletFireTimer = fireRate;
-            bullets[currentBulletCount] = Bullet{ playerRef.getPosition(), GetShootDirection(), bulletSize, bulletColor, bulletSpeed};
+            bullets[currentBulletCount] = Bullet{ playerRef->getPosition(), GetShootDirection(), bulletSize, bulletColor, bulletSpeed};
             currentBulletCount++;
         }
 
@@ -57,7 +60,7 @@ private:
         int minEnemyInd = 0;
         for (int i = 0; i < enemyCount; i++)
         {
-            float length = GetLength(playerRef.getPosition() - enemies[i].getPosition());
+            float length = GetLength(playerRef->getPosition() - enemies[i].getPosition());
             if (length < minLength)
             {
                 minLength = length;
@@ -65,13 +68,13 @@ private:
             }
         }
 
-        sf::Vector2f shootDir = GetNormalizedVector(enemies[minEnemyInd].getPosition() - playerRef.getPosition());
+        sf::Vector2f shootDir = GetNormalizedVector(enemies[minEnemyInd].getPosition() - playerRef->getPosition());
 
         return shootDir;
     }
 
 private:
-    const Player& playerRef;
+    const Player* playerRef;
     float fireRate;
     const Enemy* const enemies;
     int enemyCount;

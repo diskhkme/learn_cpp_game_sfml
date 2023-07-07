@@ -30,6 +30,8 @@ public:
 		this->enemySpeed = speed;
 	}
 
+	int GetCurrentEnemyCount() { return currentEnemyCount; }
+
 	// 임시. Actor 상속 후엔 바꿀 것
 	void Update(float dt)
 	{
