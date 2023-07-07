@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Weapon.h"
+#include "EnemyManager.h"
 
 int main()
 {
@@ -27,22 +28,17 @@ int main()
         window.setFramerateLimit(60);
 
         // Player
-        Player player = Player{ sf::Vector2f{10.0f, 10.0f}, 20.0f, sf::Color{238,108,77,255}, 200.0f };
+        Player player = Player{ sf::Vector2f{screenWidth/2.0f, screenHeight/2.0f}, 20.0f, sf::Color{238,108,77,255}, 200.0f };
 
         // Enemies
-        const int enemyCount = 10;
-        Enemy* enemies = new Enemy[enemyCount];
-        const sf::Color enemyColor = sf::Color{ 200, 150, 255, 255 };
-        for (int i = 0; i < enemyCount; i++)
-        {
-            sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-            enemies[i] = Enemy{ enemyInitPosition , 10.0f, enemyColor, 100.0f, &player };
-        }
+        const int maxEnemyCount = 50;
+        Enemy* enemies = new Enemy[maxEnemyCount];
+        EnemyManager enemyManager = EnemyManager{ &player, enemies, maxEnemyCount, 1.5f, screenWidth, screenHeight };
 
         // Weapon (Bullet 생성)
         const int maxBullet = 50;
         Bullet* bullets = new Bullet[maxBullet];
-        Weapon weapon = Weapon{ bullets, maxBullet, player, 1.0f, enemies, enemyCount};
+        Weapon weapon = Weapon{ bullets, maxBullet, player, 1.0f, enemies, maxEnemyCount };
 
         sf::Clock deltaClock;
         while (window.isOpen())
@@ -58,10 +54,7 @@ int main()
 
             // Logic Update
             player.Update(dt);
-            for (int i = 0; i < enemyCount; i++)
-            {
-                enemies[i].Update(dt);
-            }
+            enemyManager.Update(dt);
             weapon.Update(dt);
 
             // Draw Objects
@@ -69,10 +62,7 @@ int main()
             {
                 player.Draw(window);
 
-                for (int i = 0; i < enemyCount; i++)
-                {
-                    enemies[i].Draw(window);
-                }
+                enemyManager.Draw(window);
                 
                 weapon.Draw(window);
 
@@ -89,5 +79,4 @@ int main()
 
 //--- Practice
 
-// 1. 적이 어느 반경 안에 없을 때는 오른쪽으로 발사하도록 로직을 바꿔 보세요.
-// 2. 적이 어느 반경 안에 없을 때는 발사하지 않도록 로직을 바꿔 보세요.
+// 
