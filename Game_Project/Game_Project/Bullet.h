@@ -20,9 +20,9 @@ public:
         : Bullet{ sf::Vector2f{0,0}, sf::Vector2f{1.0f,0}, 0.3f, sf::Color{255,255,0,255}, 5.0f }
     {}
 
-    void Update()
+    void Update(float dt)
     {
-        UpdatePosition();
+        UpdatePosition(dt);
         shape.setPosition(position);
     }
 
@@ -34,10 +34,9 @@ public:
     sf::Vector2f getPosition() const { return position; }
 
 private:
-    void UpdatePosition()
+    void UpdatePosition(float dt)
     {
-        position += direction * speed;
-        shape.setPosition(position);
+        position += direction * speed * dt;
     }
 
 private:

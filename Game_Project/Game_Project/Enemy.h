@@ -20,9 +20,9 @@ public:
         : Enemy{ sf::Vector2f{0,0}, 1.0f, sf::Color{255,255,0,255}, 1.0f, nullptr }
     {}
 
-    void Update()
+    void Update(float dt)
     {
-        UpdatePosition();
+        UpdatePosition(dt);
         shape.setPosition(position);
     }
 
@@ -34,20 +34,17 @@ public:
     sf::Vector2f getPosition() const { return position; }
 
 private:
-    void UpdatePosition()
+    void UpdatePosition(float dt)
     {
         sf::Vector2f playerPosition = playerRef->getPosition();
 
-        float enemyToPlayerX = playerPosition.x - position.x;
-        float enemyToPlayerY = playerPosition.y - position.y;
+        sf::Vector2f enemyToPlayer = playerPosition - position;
 
-        float length = sqrt(enemyToPlayerX * enemyToPlayerX + enemyToPlayerY * enemyToPlayerY);
+        float length = sqrt(enemyToPlayer.x * enemyToPlayer.x + enemyToPlayer.y * enemyToPlayer.y);
 
-        enemyToPlayerX /= length;
-        enemyToPlayerY /= length;
+        enemyToPlayer /= length;
 
-        position.x += enemyToPlayerX * speed;
-        position.y += enemyToPlayerY * speed;
+        position += enemyToPlayer * speed * dt;
     }
 
 private:

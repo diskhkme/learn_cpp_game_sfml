@@ -12,9 +12,9 @@ public:
         shape.setFillColor(color);
     }
 
-    void Update()
+    void Update(float dt)
     {
-        ProcessInput();
+        ProcessInput(dt);
         shape.setPosition(position);
     }
 
@@ -25,23 +25,23 @@ public:
 
     sf::Vector2f getPosition() const { return position; }
 private:
-    void ProcessInput()
+    void ProcessInput(float dt)
     {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
-            position.x -= speed;
+            position.x -= speed * dt;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
         {
-            position.x += speed;
+            position.x += speed * dt;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
         {
-            position.y -= speed;
+            position.y -= speed * dt;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
         {
-            position.y += speed;
+            position.y += speed * dt;
         }
     }
 
