@@ -16,9 +16,9 @@ Bullet::Bullet()
 	: Bullet{ sf::Vector2f{0,0}, sf::Vector2f{1.0f,0}, 0.3f, sf::Color{255,255,0,255}, 5.0f }
 {}
 
-void Bullet::Update()
+void Bullet::Update(float dt)
 {
-	UpdatePosition();
+	UpdatePosition(dt);
 	shape.setPosition(position);
 }
 
@@ -28,9 +28,9 @@ void Bullet::Draw(sf::RenderWindow& window)
 }
 
 
-void Bullet::UpdatePosition()
+void Bullet::UpdatePosition(float dt)
 {
-	position += direction * speed;
+	position += direction * speed * dt;
 	shape.setPosition(position);
 }
 

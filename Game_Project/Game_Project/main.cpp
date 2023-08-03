@@ -27,7 +27,7 @@ int main()
         window.setFramerateLimit(60);
 
         // Player
-        Player player = Player{ sf::Vector2f{10.0f, 10.0f}, 20.0f, sf::Color{238,108,77,255}, 2.0f };
+        Player player = Player{ sf::Vector2f{10.0f, 10.0f}, 20.0f, sf::Color{238,108,77,255}, 200.0f };
 
         // Enemies
         const int enemyCount = 10;
@@ -36,12 +36,15 @@ int main()
         for (int i = 0; i < enemyCount; i++)
         {
             sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-            enemies[i] = Enemy{ enemyInitPosition , 10.0f, enemyColor, 1.0f, &player };
+            enemies[i] = Enemy{ enemyInitPosition , 10.0f, enemyColor, 100.0f, &player };
         }
 
         // Bullets
         const int bulletCount = 50;
         Bullet* bullets = new Bullet[bulletCount];
+        int currentBulletCount = 0;
+        float bulletFireRateSecond = 1.0f;
+        float bulletFireTimer = bulletFireRateSecond;
         const sf::Color bulletColor = sf::Color{ 0, 255, 0, 255 };
         for (int i = 0; i < bulletCount; i++)
         {
@@ -49,6 +52,7 @@ int main()
             bullets[i] = Bullet{ player.getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  10.0f };
         }
 
+        sf::Clock deltaClock;
         while (window.isOpen())
         {
             sf::Event event;
@@ -58,15 +62,27 @@ int main()
                     window.close();
             }
 
+            float dt = deltaClock.restart().asSeconds();
+
             // Logic Update
-            player.Update();
+
+            // Fire bullet
+            bulletFireTimer -= dt;
+            if (bulletFireTimer < 0.0f)
+            {
+                bulletFireTimer = bulletFireRateSecond;
+                bullets[currentBulletCount] = Bullet{ player.getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  500.0f };
+                currentBulletCount++;
+            }
+
+            player.Update(dt);
             for (int i = 0; i < enemyCount; i++)
             {
-                enemies[i].Update();
+                enemies[i].Update(dt);
             }
-            for (int i = 0; i < bulletCount; i++)
+            for (int i = 0; i < currentBulletCount; i++)
             {
-                bullets[i].Update();
+                bullets[i].Update(dt);
             }
 
             // Draw Objects
