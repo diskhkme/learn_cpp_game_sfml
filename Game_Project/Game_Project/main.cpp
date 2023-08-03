@@ -8,28 +8,8 @@
 #define DBG_NEW new
 #endif
 
-
 #include <SFML/Graphics.hpp>
-
-void UpdatePlayerPosition(sf::Vector2f& playerPosition)
-{
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-    {
-        playerPosition.x -= 1.0f;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-    {
-        playerPosition.x += 1.0f;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-    {
-        playerPosition.y -= 1.0f;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-    {
-        playerPosition.y += 1.0f;
-    }
-}
+#include "Player.h"
 
 void UpdateEnemiesPosition(float enemySpeed, sf::Vector2f* enemyPositions, int enemyCount, sf::Vector2f playerPosition)
 {
@@ -62,11 +42,7 @@ int main()
         window.setFramerateLimit(60);
 
         // Player
-        sf::Vector2f playerPosition = sf::Vector2f{ 10.0f, 10.0f };
-        const float playerSize = 20.0f;
-        const sf::Color playerColor = sf::Color{ 238, 108, 77, 255 };
-        sf::RectangleShape player = sf::RectangleShape{ sf::Vector2f{playerSize, playerSize} };
-        player.setFillColor(playerColor);
+        Player player = Player{ sf::Vector2f{10.0f, 10.0f}, 20.0f, sf::Color{238,108,77,255}, 2.0f };
 
         // Enemies
         const int enemyCount = 10;
@@ -96,11 +72,9 @@ int main()
             }
 
             // Logic Update
-            UpdatePlayerPosition(playerPosition);
+            player.Update();
 
-            player.setPosition(playerPosition);
-
-            UpdateEnemiesPosition(enemySpeed, enemyPositions, enemyCount, playerPosition);
+            UpdateEnemiesPosition(enemySpeed, enemyPositions, enemyCount, player.getPosition());
             for (int i = 0; i < enemyCount; i++)
             {
                 enemies[i].setPosition(enemyPositions[i]);
@@ -109,7 +83,7 @@ int main()
             // Draw Objects
             window.clear();
             {
-                window.draw(player);
+                player.Draw(window);
 
                 for (int i = 0; i < enemyCount; i++)
                 {
@@ -122,10 +96,11 @@ int main()
 
         delete[] enemyPositions;
     }
-    
+
     return 0;
 }
 
 //--- Practice
 
-// 1. 
+// 1. 강의 자료를 참고하여 Player 클래스를 Player.h/Player.cpp 에 나누어 구현해 보세요.
+// 2. Enemy (Enemy들이 아닌 Enemy 한 객체)도 클래스화하여 구현하는 것을 시도해 보세요.
