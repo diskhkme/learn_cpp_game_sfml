@@ -9,7 +9,7 @@ class Enemy;
 class Weapon
 {
 public:
-    Weapon(Bullet* bullets, const Player& player, float fireRate, int maxBulletCount, const Enemy* const enemies, int enemyCount);
+    Weapon(Bullet* bullets, const Player* const player, float fireRate, int maxBulletCount, const Enemy* const enemies, int enemyCount);
 
     void SetBulletData(float size, const sf::Color& color, float speed);
 
@@ -21,7 +21,7 @@ private:
     sf::Vector2f CalculateShootDirection();
 
 private:
-    const Player& playerRef;
+    const Player* const playerRef;
     float fireRate;
 
     float bulletSize;

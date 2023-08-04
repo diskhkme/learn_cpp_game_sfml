@@ -4,7 +4,7 @@
 #include "Enemy.h"
 #include "MathUtil.h"
 
-Weapon::Weapon(Bullet* bullets, const Player& player, float fireRate, int maxBulletCount, const Enemy* const enemies, int enemyCount)
+Weapon::Weapon(Bullet* bullets, const Player* const player, float fireRate, int maxBulletCount, const Enemy* const enemies, int enemyCount)
 	: bullets{ bullets }, playerRef{player}, fireRate{ fireRate }, bulletMaxCount{ maxBulletCount },
 	enemies{enemies}, enemyCount{enemyCount}
 {
@@ -31,7 +31,7 @@ void Weapon::SpawnBullet(float dt)
 	if (bulletFireTimer < 0.0f)
 	{
 		bulletFireTimer = fireRate;
-		bullets[currentBulletCount] = Bullet{ playerRef.getPosition(), CalculateShootDirection(), bulletSize, bulletColor, bulletSpeed};
+		bullets[currentBulletCount] = Bullet{ playerRef->getPosition(), CalculateShootDirection(), bulletSize, bulletColor, bulletSpeed};
 		currentBulletCount++;
 	}
 }
@@ -42,7 +42,7 @@ sf::Vector2f Weapon::CalculateShootDirection()
 	int minEnemyInd = 0;
 	for (int i = 0; i < enemyCount; i++)
 	{
-		float length = GetLength(playerRef.getPosition() - enemies[i].getPosition());
+		float length = GetLength(playerRef->getPosition() - enemies[i].getPosition());
 		if (length < minLength)
 		{
 			minLength = length;
@@ -50,7 +50,7 @@ sf::Vector2f Weapon::CalculateShootDirection()
 		}
 	}
 
-	sf::Vector2f shootDir = GetNormalizedVector(enemies[minEnemyInd].getPosition() - playerRef.getPosition());
+	sf::Vector2f shootDir = GetNormalizedVector(enemies[minEnemyInd].getPosition() - playerRef->getPosition());
 
 	return shootDir;
 }

@@ -12,6 +12,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h" />
@@ -19,5 +20,6 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="MathUtil.h" />
+    <ClInclude Include="Game.h" />
   </ItemGroup>
 </Project>
