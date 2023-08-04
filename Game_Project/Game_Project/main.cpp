@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Weapon.h"
 
 int main()
 {
@@ -39,18 +40,10 @@ int main()
             enemies[i] = Enemy{ enemyInitPosition , 10.0f, enemyColor, 100.0f, &player };
         }
 
-        // Bullets
-        const int bulletCount = 50;
-        Bullet* bullets = new Bullet[bulletCount];
-        int currentBulletCount = 0;
-        float bulletFireRateSecond = 1.0f;
-        float bulletFireTimer = bulletFireRateSecond;
-        const sf::Color bulletColor = sf::Color{ 0, 255, 0, 255 };
-        for (int i = 0; i < bulletCount; i++)
-        {
-            sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-            bullets[i] = Bullet{ player.getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  10.0f };
-        }
+        // Weapon (Bullet 생성)
+        const int maxBulletCount = 50;
+        Bullet* bullets = new Bullet[maxBulletCount];
+        Weapon weapon = Weapon{ bullets, player, 1.0f, maxBulletCount, enemies, enemyCount };
 
         sf::Clock deltaClock;
         while (window.isOpen())
@@ -65,22 +58,14 @@ int main()
             float dt = deltaClock.restart().asSeconds();
 
             // Logic Update
-
-            // Fire bullet
-            bulletFireTimer -= dt;
-            if (bulletFireTimer < 0.0f)
-            {
-                bulletFireTimer = bulletFireRateSecond;
-                bullets[currentBulletCount] = Bullet{ player.getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  500.0f };
-                currentBulletCount++;
-            }
+            weapon.SpawnBullet(dt);
 
             player.Update(dt);
             for (int i = 0; i < enemyCount; i++)
             {
                 enemies[i].Update(dt);
             }
-            for (int i = 0; i < currentBulletCount; i++)
+            for (int i = 0; i < weapon.GetCurrentBulletCount(); i++)
             {
                 bullets[i].Update(dt);
             }
@@ -94,7 +79,7 @@ int main()
                 {
                     enemies[i].Draw(window);
                 }
-                for (int i = 0; i < bulletCount; i++)
+                for (int i = 0; i < weapon.GetCurrentBulletCount(); i++)
                 {
                     bullets[i].Draw(window);
                 }
