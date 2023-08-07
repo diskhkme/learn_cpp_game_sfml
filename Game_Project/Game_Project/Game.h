@@ -6,6 +6,7 @@
 class Player;
 class Enemy;
 class Bullet;
+class Actor;
 
 class Game
 {
@@ -37,9 +38,11 @@ private:
 	int screenHeight = 450;
 	sf::RenderWindow window{ sf::VideoMode(screenWidth, screenHeight), "CPP Game" };
 
+	std::vector<Actor*> actors;
+	
 	Player* player;
-	std::vector<Enemy*> enemies;
-	std::vector<Bullet*> bullets;
+	std::vector<Enemy*> enemies; // 사용해야 할까?
+	std::vector<Bullet*> bullets; // 사용해야 할까?
 
 	sf::Texture shipsTexture;
 	sf::Texture projectilTexture;

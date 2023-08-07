@@ -5,10 +5,12 @@
 #include "Bullet.h"
 
 Game::Game()
-	: player{ nullptr }
+	: player{ nullptr }, bulletFirePeriod{0.0}, bulletFireTimer{0.0}
 {
 	enemies.clear();
 	bullets.clear();
+
+	actors.clear();
 }
 bool Game::Initialize()
 {
@@ -56,12 +58,13 @@ void Game::InitializeGame()
 {
 	// Player
 	player = new Player{ this, sf::Vector2f{screenWidth / 2.0f, screenHeight / 2.0f}, 3.0f, 200.0f };
+	actors.push_back(player);
 
 	// Enemies
 	for (int i = 0; i < 10; i++)
 	{
 		sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-		enemies.emplace_back(new Enemy{this, enemyInitPosition , 3.0f, 100.0f });
+		actors.emplace_back(new Enemy{ this, enemyInitPosition , 3.0f, 100.0f });
 	}
 
 	// Weapon (Bullet »ý¼º)
@@ -89,17 +92,12 @@ void Game::UpdateGame()
 	if (bulletFireTimer < 0.0f)
 	{
 		bulletFireTimer = bulletFirePeriod;
-		bullets.emplace_back(new Bullet{ this, 3.0f,  500.0f });
+		actors.emplace_back(new Bullet{ this, 3.0f,  500.0f });
 	}
 
-	player->Update(dt);
-	for (int i = 0; i < enemies.size(); i++)
+	for (int i = 0; i < actors.size(); i++)
 	{
-		enemies[i]->Update(dt);
-	}
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		bullets[i]->Update(dt);
+		actors[i]->Update(dt);
 	}
 
 }
@@ -108,17 +106,10 @@ void Game::DrawGame()
 {
 	window.clear();
 	{
-		player->Draw(window);
-
-		for (int i = 0; i < enemies.size(); i++)
+		for (int i = 0; i < actors.size(); i++)
 		{
-			enemies[i]->Draw(window);
+			actors[i]->Draw(window);
 		}
-		for (int i = 0; i < bullets.size(); i++)
-		{
-			bullets[i]->Draw(window);
-		}
-
 	}
 	window.display();
 }
