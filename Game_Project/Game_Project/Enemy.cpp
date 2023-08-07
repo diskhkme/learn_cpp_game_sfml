@@ -1,9 +1,9 @@
+#include "Game.h"
 #include "Enemy.h"
 #include "Player.h"
 
-Enemy::Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed,
-	const Player* player) // dependency injection
-	: position{ pos }, size{ size }, color{ color }, speed{ speed }, playerRef{ player }
+Enemy::Enemy(Game* game, const sf::Vector2f pos, float size, sf::Color color, float speed) // dependency injection
+	: position{ pos }, size{ size }, color{ color }, speed{ speed }, game{game}
 {
 	shape = sf::CircleShape{ size };
 	shape.setFillColor(color);
@@ -12,7 +12,7 @@ Enemy::Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed,
 }
 
 Enemy::Enemy()
-	: Enemy{ sf::Vector2f{0,0}, 1.0f, sf::Color{255,255,0,255}, 1.0f, nullptr }
+	: Enemy{nullptr, sf::Vector2f{0,0}, 1.0f, sf::Color{255,255,0,255}, 1.0f }
 {}
 
 
@@ -29,7 +29,7 @@ void Enemy::Draw(sf::RenderWindow& window)
 
 void Enemy::UpdatePosition(float dt)
 {
-	sf::Vector2f playerPosition = playerRef->getPosition();
+	sf::Vector2f playerPosition = game->GetPlayer()->getPosition();
 
 	sf::Vector2f enemyToPlayer = playerPosition - position;
 

@@ -16,6 +16,10 @@ public:
 
 	void Shutdown();
 
+	Player* GetPlayer() { return player; }
+	std::vector<Enemy*> GetEnemies() { return enemies; }
+	std::vector<Bullet*> GetBullets() { return bullets; }
+
 private:
 	void InitializeGame();
 

@@ -2,11 +2,12 @@
 
 #include <SFML/Graphics.hpp>
 
+class Game;
+
 class Bullet
 {
 public:
-    Bullet(const sf::Vector2f& pos, const sf::Vector2f& direction,
-        float size, const sf::Color& color, float speed);
+    Bullet(Game* game, float size, const sf::Color& color, float speed);
 
     Bullet();
 
@@ -18,8 +19,11 @@ public:
 
 private:
     void UpdatePosition(float dt);
+    sf::Vector2f GetPlayerToClosestEnemyVector();
 
 private:
+    Game* game;
+
     sf::Vector2f position;
     sf::Vector2f direction;
     float speed;

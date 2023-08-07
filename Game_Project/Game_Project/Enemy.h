@@ -3,12 +3,12 @@
 #include <SFML/Graphics.hpp>
 
 class Player;
+class Game;
 
 class Enemy
 {
 public:
-    Enemy(const sf::Vector2f pos, float size, sf::Color color, float speed,
-        const Player* player);
+    Enemy(Game* game, const sf::Vector2f pos, float size, sf::Color color, float speed);
     Enemy();
 
     void Update(float dt);
@@ -21,9 +21,10 @@ private:
     void UpdatePosition(float dt);
 
 private:
+    Game* game;
+
     sf::Vector2f position;
     float speed;
-    const Player* playerRef;
 
     sf::CircleShape shape;
     float size;

@@ -53,7 +53,7 @@ void Game::InitializeGame()
 	for (int i = 0; i < 10; i++)
 	{
 		sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-		enemies.emplace_back(new Enemy{ enemyInitPosition , 10.0f, enemyColor, 100.0f, player });
+		enemies.emplace_back(new Enemy{this, enemyInitPosition , 10.0f, enemyColor, 100.0f });
 	}
 
 	// Weapon (Bullet »ý¼º)
@@ -82,7 +82,7 @@ void Game::UpdateGame()
 	if (bulletFireTimer < 0.0f)
 	{
 		bulletFireTimer = bulletFirePeriod;
-		bullets.emplace_back(new Bullet{ player->getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  500.0f });
+		bullets.emplace_back(new Bullet{ this, 3.0f, bulletColor,  500.0f });
 	}
 
 	player->Update(dt);
