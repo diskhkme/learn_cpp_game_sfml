@@ -5,11 +5,8 @@
 
 
 Bullet::Bullet(Game* game, float size, float speed)
-	: size{ size }, speed{ speed }, game{game}
+	: Actor{ game, game->GetPlayer()->getPosition(), speed, size }
 {
-	Player* player = this->game->GetPlayer();
-	position = player->getPosition();
-
 	direction = GetPlayerToClosestEnemyVector();
 
 	shape.setTexture(this->game->GetProjectileTexture());
@@ -29,12 +26,6 @@ void Bullet::Update(float dt)
 	UpdatePosition(dt);
 	shape.setPosition(position);
 }
-
-void Bullet::Draw(sf::RenderWindow& window)
-{
-	window.draw(shape);
-}
-
 
 void Bullet::UpdatePosition(float dt)
 {

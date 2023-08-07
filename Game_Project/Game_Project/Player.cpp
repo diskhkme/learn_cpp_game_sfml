@@ -3,7 +3,7 @@
 
 
 Player::Player(Game* game, const sf::Vector2f pos, float size, float speed)
-	: game{ game }, position {	pos}, size{ size }, speed{ speed }
+	: Actor{ game, pos, speed, size }
 {
 	shape.setTexture(this->game->GetShipTexture());
 	shape.setTextureRect(sf::IntRect{ 8,0,8,8 });
@@ -18,12 +18,6 @@ void Player::Update(float dt)
 	ProcessInput(dt);
 	shape.setPosition(position);
 }
-
-void Player::Draw(sf::RenderWindow& window)
-{
-	window.draw(shape);
-}
-
 
 void Player::ProcessInput(float dt)
 {

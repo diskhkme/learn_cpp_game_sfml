@@ -1,10 +1,11 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "Actor.h"
 
 class Game;
 
-class Bullet
+class Bullet : public Actor
 {
 public:
     Bullet(Game* game, float size, float speed);
@@ -13,21 +14,11 @@ public:
 
     void Update(float dt);
 
-    void Draw(sf::RenderWindow& window);
-
-    sf::Vector2f getPosition() const { return position; }
-
 private:
     void UpdatePosition(float dt);
     sf::Vector2f GetPlayerToClosestEnemyVector();
 
 private:
-    Game* game;
-
-    sf::Vector2f position;
     sf::Vector2f direction;
-    float speed;
-
-    sf::Sprite shape;
-    float size;
+    
 };

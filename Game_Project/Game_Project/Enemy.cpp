@@ -3,7 +3,7 @@
 #include "Player.h"
 
 Enemy::Enemy(Game* game, const sf::Vector2f pos, float size, float speed) // dependency injection
-	: position{ pos }, size{ size }, speed{ speed }, game{game}
+	: Actor{ game, pos, speed, size }
 {
 	shape.setTexture(this->game->GetShipTexture());
 	shape.setTextureRect(sf::IntRect{ 40,0,8,8 });
@@ -22,11 +22,6 @@ void Enemy::Update(float dt)
 {
 	UpdatePosition(dt);
 	shape.setPosition(position);
-}
-
-void Enemy::Draw(sf::RenderWindow& window)
-{
-	window.draw(shape);
 }
 
 void Enemy::UpdatePosition(float dt)
