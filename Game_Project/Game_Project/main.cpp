@@ -13,6 +13,7 @@
 #include <vector>
 #include "Player.h"
 #include "Enemy.h"
+#include "Bullet.h"
 
 int main()
 {
@@ -40,6 +41,16 @@ int main()
             enemies.emplace_back(new Enemy{ enemyInitPosition , 10.0f, enemyColor, 1.0f, &player });
         }
 
+        // Bullets
+        std::vector<Bullet*> bullets;
+        bullets.clear();
+        const sf::Color bulletColor = sf::Color{ 0, 255, 0, 255 };
+        for (int i = 0; i < 10; i++)
+        {
+            sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
+            bullets.emplace_back(new Bullet{ player.getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  10.0f });
+        }
+
         while (window.isOpen())
         {
             sf::Event event;
@@ -55,6 +66,10 @@ int main()
             {
                 enemies[i]->Update();
             }
+            for (int i = 0; i < bullets.size(); i++)
+            {
+                bullets[i]->Update();
+            }
 
             // Draw Objects
             window.clear();
@@ -65,6 +80,10 @@ int main()
                 {
                     enemies[i]->Draw(window);
                 }
+                for (int i = 0; i < bullets.size(); i++)
+                {
+                    bullets[i]->Draw(window);
+                }
 
             }
             window.display();
@@ -74,6 +93,10 @@ int main()
         for (int i = 0; i < enemies.size(); i++)
         {
             delete enemies[i];
+        }
+        for (int i = 0; i < bullets.size(); i++)
+        {
+            delete bullets[i];
         }
 
     }
