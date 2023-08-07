@@ -8,7 +8,7 @@ class Game;
 class Enemy
 {
 public:
-    Enemy(Game* game, const sf::Vector2f pos, float size, sf::Color color, float speed);
+    Enemy(Game* game, const sf::Vector2f pos, float size, float speed);
     Enemy();
 
     void Update(float dt);
@@ -26,7 +26,6 @@ private:
     sf::Vector2f position;
     float speed;
 
-    sf::CircleShape shape;
+    sf::Sprite shape;
     float size;
-    sf::Color color;
 };

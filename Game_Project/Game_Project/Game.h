@@ -20,6 +20,9 @@ public:
 	std::vector<Enemy*> GetEnemies() { return enemies; }
 	std::vector<Bullet*> GetBullets() { return bullets; }
 
+	sf::Texture& GetShipTexture() { return shipsTexture; }
+	sf::Texture& GetProjectileTexture() { return projectilTexture; }
+
 private:
 	void InitializeGame();
 
@@ -38,10 +41,11 @@ private:
 	std::vector<Enemy*> enemies;
 	std::vector<Bullet*> bullets;
 
+	sf::Texture shipsTexture;
+	sf::Texture projectilTexture;
+
 	float bulletFirePeriod;
 	float bulletFireTimer;
-	sf::Color enemyColor;
-	sf::Color bulletColor;
 
 	sf::Clock deltaClock;
 };

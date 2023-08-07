@@ -1,11 +1,16 @@
 #include "Player.h"
+#include "Game.h"
 
 
-Player::Player(const sf::Vector2f pos, float size, sf::Color color, float speed)
-	: position{ pos }, size{ size }, color{ color }, speed{ speed }
+Player::Player(Game* game, const sf::Vector2f pos, float size, float speed)
+	: game{ game }, position {	pos}, size{ size }, speed{ speed }
 {
-	shape = sf::RectangleShape{ sf::Vector2f{size, size} };
-	shape.setFillColor(color);
+	shape.setTexture(this->game->GetShipTexture());
+	shape.setTextureRect(sf::IntRect{ 8,0,8,8 });
+
+	shape.setScale(sf::Vector2f{ size,size });
+	sf::FloatRect bounds = shape.getLocalBounds();
+	shape.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 }
 
 void Player::Update(float dt)

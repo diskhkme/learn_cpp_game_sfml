@@ -7,7 +7,7 @@ class Game;
 class Bullet
 {
 public:
-    Bullet(Game* game, float size, const sf::Color& color, float speed);
+    Bullet(Game* game, float size, float speed);
 
     Bullet();
 
@@ -28,7 +28,6 @@ private:
     sf::Vector2f direction;
     float speed;
 
-    sf::CircleShape shape;
+    sf::Sprite shape;
     float size;
-    sf::Color color;
 };

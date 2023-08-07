@@ -14,6 +14,16 @@ bool Game::Initialize()
 {
 	// Initialize SFML System
 
+	// Initialize Resources
+	if (!shipsTexture.loadFromFile("../resources/sprites/SpaceShooterAssetPack_Ships.png"))
+	{
+		return false;
+	}
+	if (!projectilTexture.loadFromFile("../resources/sprites/SpaceShooterAssetPack_Projectiles.png"))
+	{
+		return false;
+	}
+
 	// Initialize Game
 	InitializeGame();
 
@@ -45,19 +55,16 @@ void Game::Shutdown()
 void Game::InitializeGame()
 {
 	// Player
-	player = new Player{ sf::Vector2f{screenWidth / 2.0f, screenHeight / 2.0f}, 20.0f, sf::Color{238,108,77,255}, 200.0f };
+	player = new Player{ this, sf::Vector2f{screenWidth / 2.0f, screenHeight / 2.0f}, 3.0f, 200.0f };
 
 	// Enemies
-	enemyColor = sf::Color{ 200, 150, 255, 255 };
-
 	for (int i = 0; i < 10; i++)
 	{
 		sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-		enemies.emplace_back(new Enemy{this, enemyInitPosition , 10.0f, enemyColor, 100.0f });
+		enemies.emplace_back(new Enemy{this, enemyInitPosition , 3.0f, 100.0f });
 	}
 
 	// Weapon (Bullet »ý¼º)
-	bulletColor = sf::Color{ 0, 255, 0, 255 };
 	bulletFirePeriod = 1.0f;
 	bulletFireTimer = bulletFirePeriod;
 
@@ -82,7 +89,7 @@ void Game::UpdateGame()
 	if (bulletFireTimer < 0.0f)
 	{
 		bulletFireTimer = bulletFirePeriod;
-		bullets.emplace_back(new Bullet{ this, 3.0f, bulletColor,  500.0f });
+		bullets.emplace_back(new Bullet{ this, 3.0f,  500.0f });
 	}
 
 	player->Update(dt);

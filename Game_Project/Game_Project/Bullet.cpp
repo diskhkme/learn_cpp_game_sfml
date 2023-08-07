@@ -4,22 +4,24 @@
 #include "Enemy.h"
 
 
-Bullet::Bullet(Game* game, float size, const sf::Color& color, float speed)
-	: size{ size }, color{ color }, speed{ speed }, game{game}
+Bullet::Bullet(Game* game, float size, float speed)
+	: size{ size }, speed{ speed }, game{game}
 {
 	Player* player = this->game->GetPlayer();
 	position = player->getPosition();
 
 	direction = GetPlayerToClosestEnemyVector();
 
-	shape = sf::CircleShape{ size };
-	shape.setFillColor(color);
-	shape.setOutlineColor(sf::Color::Green);
-	shape.setOutlineThickness(0.3f);
+	shape.setTexture(this->game->GetProjectileTexture());
+	shape.setTextureRect(sf::IntRect{ 0,0,8,8 });
+
+	shape.setScale(sf::Vector2f{ size,size });
+	sf::FloatRect bounds = shape.getLocalBounds();
+	shape.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 }
 
 Bullet::Bullet()
-	: Bullet{nullptr, 0.3f, sf::Color{255,255,0,255}, 5.0f }
+	: Bullet{nullptr, 0.3f, 5.0f }
 {}
 
 void Bullet::Update(float dt)

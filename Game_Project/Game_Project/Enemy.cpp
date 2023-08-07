@@ -2,17 +2,19 @@
 #include "Enemy.h"
 #include "Player.h"
 
-Enemy::Enemy(Game* game, const sf::Vector2f pos, float size, sf::Color color, float speed) // dependency injection
-	: position{ pos }, size{ size }, color{ color }, speed{ speed }, game{game}
+Enemy::Enemy(Game* game, const sf::Vector2f pos, float size, float speed) // dependency injection
+	: position{ pos }, size{ size }, speed{ speed }, game{game}
 {
-	shape = sf::CircleShape{ size };
-	shape.setFillColor(color);
-	shape.setOutlineColor(sf::Color::Red);
-	shape.setOutlineThickness(1.0f);
+	shape.setTexture(this->game->GetShipTexture());
+	shape.setTextureRect(sf::IntRect{ 40,0,8,8 });
+
+	shape.setScale(sf::Vector2f{ size,size });
+	sf::FloatRect bounds = shape.getLocalBounds();
+	shape.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 }
 
 Enemy::Enemy()
-	: Enemy{nullptr, sf::Vector2f{0,0}, 1.0f, sf::Color{255,255,0,255}, 1.0f }
+	: Enemy{nullptr, sf::Vector2f{0,0}, 1.0f, 1.0f }
 {}
 
 
