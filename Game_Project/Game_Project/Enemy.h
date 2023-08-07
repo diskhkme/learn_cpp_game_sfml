@@ -11,8 +11,9 @@ class Enemy : public Actor
 public:
     Enemy(Game* game, const sf::Vector2f pos, float size, float speed);
     Enemy();
+    virtual ~Enemy();
 
-    void Update(float dt);
+    virtual void Update(float dt) override;
 
 private:
     void UpdatePosition(float dt);

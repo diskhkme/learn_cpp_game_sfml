@@ -9,8 +9,9 @@ class Player: public Actor
 {
 public:
     Player(Game* game, const sf::Vector2f pos, float size, float speed);
+    virtual ~Player();
 
-    void Update(float dt);
+    virtual void Update(float dt) override;
 
 private:
     void ProcessInput(float dt);

@@ -17,6 +17,10 @@ Enemy::Enemy()
 	: Enemy{nullptr, sf::Vector2f{0,0}, 1.0f, 1.0f }
 {}
 
+Enemy::~Enemy()
+{
+}
+
 
 void Enemy::Update(float dt)
 {

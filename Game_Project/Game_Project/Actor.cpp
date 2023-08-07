@@ -5,6 +5,10 @@ Actor::Actor(Game* game, sf::Vector2f pos, float speed, float size)
 {
 }
 
+Actor::~Actor()
+{
+}
+
 void Actor::Update(float dt)
 {
 	// ??

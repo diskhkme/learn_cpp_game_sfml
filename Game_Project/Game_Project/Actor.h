@@ -8,8 +8,9 @@ class Actor
 {
 public:
 	Actor(Game* game, sf::Vector2f pos, float speed, float size);
+	virtual ~Actor();
 
-	void Update(float dt);
+	virtual void Update(float dt) = 0;
 
 	void Draw(sf::RenderWindow& window);
 

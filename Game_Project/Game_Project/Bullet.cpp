@@ -21,6 +21,10 @@ Bullet::Bullet()
 	: Bullet{nullptr, 0.3f, 5.0f }
 {}
 
+Bullet::~Bullet()
+{
+}
+
 void Bullet::Update(float dt)
 {
 	UpdatePosition(dt);

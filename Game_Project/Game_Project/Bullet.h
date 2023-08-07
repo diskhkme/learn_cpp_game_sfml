@@ -12,7 +12,9 @@ public:
 
     Bullet();
 
-    void Update(float dt);
+    virtual ~Bullet();
+
+    virtual void Update(float dt) override;
 
 private:
     void UpdatePosition(float dt);

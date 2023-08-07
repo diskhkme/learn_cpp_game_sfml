@@ -13,6 +13,10 @@ Player::Player(Game* game, const sf::Vector2f pos, float size, float speed)
 	shape.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 }
 
+Player::~Player()
+{
+}
+
 void Player::Update(float dt)
 {
 	ProcessInput(dt);

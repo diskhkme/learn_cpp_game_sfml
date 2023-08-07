@@ -43,14 +43,9 @@ void Game::RunLoop()
 
 void Game::Shutdown()
 {
-	delete player;
-	for (int i = 0; i < bullets.size(); i++)
+	for (int i = 0; i < actors.size(); i++)
 	{
-		delete bullets[i];
-	}
-	for (int i = 0; i < enemies.size(); i++)
-	{
-		delete enemies[i];
+		delete actors[i];
 	}
 }
 

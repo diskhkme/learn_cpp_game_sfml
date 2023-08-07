@@ -15,7 +15,7 @@
 int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(2508); // 누수가 있는 경우 할당 번호로 중단 설정
+    //_CrtSetBreakAlloc(20394); // 누수가 있는 경우 할당 번호로 중단 설정
 
     {
         Game game;
