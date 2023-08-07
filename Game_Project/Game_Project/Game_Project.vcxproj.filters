@@ -24,6 +24,7 @@
     <ClCompile Include="Player.cpp">
       <Filter>Actors</Filter>
     </ClCompile>
+    <ClCompile Include="EnemySpawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -39,5 +40,6 @@
     <ClInclude Include="Player.h">
       <Filter>Actors</Filter>
     </ClInclude>
+    <ClInclude Include="EnemySpawner.h" />
   </ItemGroup>
 </Project>

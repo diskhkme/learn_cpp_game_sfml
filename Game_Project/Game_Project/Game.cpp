@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "EnemySpawner.h"
 
 Game::Game()
 	: player{ nullptr }, bulletFirePeriod{0.0}, bulletFireTimer{0.0}, score{0}
@@ -52,6 +53,8 @@ void Game::Shutdown()
 	{
 		delete actors[i];
 	}
+
+	delete enemySpawner;
 }
 
 void Game::InitializeGame()
@@ -60,15 +63,12 @@ void Game::InitializeGame()
 	player = new Player{ this, ActorType::PLAYER, sf::Vector2f{screenWidth / 2.0f, screenHeight / 2.0f}, 3.0f, 200.0f };
 	actors.push_back(player);
 
-	// Enemies
-	for (int i = 0; i < 10; i++)
-	{
-		sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-		actors.emplace_back(new Enemy{ this, ActorType::ENEMY, enemyInitPosition , 3.0f, 100.0f });
-	}
+	// Enemiy Spawner
+	enemySpawner = new EnemySpawner{ this, 1.0f };
+	enemySpawner->SetEnemyData(3.0f, 180.0f);
 
 	// Weapon (Bullet »ý¼º)
-	bulletFirePeriod = 1.0f;
+	bulletFirePeriod = 2.0f;
 	bulletFireTimer = bulletFirePeriod;
 
 	// Background
@@ -103,6 +103,7 @@ void Game::UpdateGame()
 
 	// Logic Update
 	SpawnBullet(dt);
+	enemySpawner->Update(dt);
 
 	for (int i = 0; i < actors.size(); i++)
 	{

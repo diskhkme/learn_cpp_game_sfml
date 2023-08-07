@@ -7,6 +7,7 @@ class Player;
 class Enemy;
 class Bullet;
 class Actor;
+class EnemySpawner;
 
 class Game
 {
@@ -18,10 +19,12 @@ public:
 	void Shutdown();
 
 	Player* GetPlayer() { return player; }
-	std::vector<Actor*> GetActors() { return actors; }
+	std::vector<Actor*>& GetActors() { return actors; }
 
 	sf::Texture& GetShipTexture() { return shipsTexture; }
 	sf::Texture& GetProjectileTexture() { return projectilTexture; }
+
+	sf::Vector2i GetScreenSize() { return sf::Vector2i{screenWidth, screenHeight}; }
 
 private:
 	void InitializeGame();
@@ -42,6 +45,8 @@ private:
 	std::vector<Actor*> actors;
 	
 	Player* player;
+
+	EnemySpawner* enemySpawner;
 
 	sf::Texture shipsTexture;
 	sf::Texture projectilTexture;
