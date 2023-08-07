@@ -45,6 +45,9 @@ private:
 
 	sf::Texture shipsTexture;
 	sf::Texture projectilTexture;
+	sf::Texture backgroundTexture;
+
+	sf::Sprite backgroundShape;
 
 	float bulletFirePeriod;
 	float bulletFireTimer;

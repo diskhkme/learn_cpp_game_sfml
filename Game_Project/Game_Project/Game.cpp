@@ -22,6 +22,10 @@ bool Game::Initialize()
 	{
 		return false;
 	}
+	if (!backgroundTexture.loadFromFile("../resources/sprites/SpaceShooterAssetPack_BackGrounds.png"))
+	{
+		return false;
+	}
 
 	// Initialize Game
 	InitializeGame();
@@ -63,6 +67,15 @@ void Game::InitializeGame()
 	bulletFirePeriod = 1.0f;
 	bulletFireTimer = bulletFirePeriod;
 
+	// Background
+	backgroundShape.setTexture(backgroundTexture);
+	backgroundShape.setTextureRect(sf::IntRect{ 0,0,128,256 });
+
+	backgroundShape.setScale(sf::Vector2f{ 3.0,3.0 });
+	sf::FloatRect bounds = backgroundShape.getLocalBounds();
+	backgroundShape.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
+	backgroundShape.setPosition(sf::Vector2f{ (float)screenWidth / 2, (float)screenHeight / 2 });
+	backgroundShape.setRotation(90.0f);
 }
 
 void Game::ProcessInput()
@@ -134,6 +147,10 @@ void Game::DrawGame()
 {
 	window.clear();
 	{
+		// draw backgrounds
+		window.draw(backgroundShape);
+
+
 		for (int i = 0; i < actors.size(); i++)
 		{
 			actors[i]->Draw(window);
