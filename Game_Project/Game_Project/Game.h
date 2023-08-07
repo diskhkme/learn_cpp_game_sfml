@@ -46,11 +46,15 @@ private:
 	sf::Texture shipsTexture;
 	sf::Texture projectilTexture;
 	sf::Texture backgroundTexture;
+	sf::Font font;
 
 	sf::Sprite backgroundShape;
 
 	float bulletFirePeriod;
 	float bulletFireTimer;
+
+	int score;
+	sf::Text scoreText;
 
 	sf::Clock deltaClock;
 };

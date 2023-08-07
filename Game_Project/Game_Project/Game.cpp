@@ -5,7 +5,7 @@
 #include "Bullet.h"
 
 Game::Game()
-	: player{ nullptr }, bulletFirePeriod{0.0}, bulletFireTimer{0.0}
+	: player{ nullptr }, bulletFirePeriod{0.0}, bulletFireTimer{0.0}, score{0}
 {
 	actors.clear();
 }
@@ -23,6 +23,10 @@ bool Game::Initialize()
 		return false;
 	}
 	if (!backgroundTexture.loadFromFile("../resources/sprites/SpaceShooterAssetPack_BackGrounds.png"))
+	{
+		return false;
+	}
+	if (!font.loadFromFile("../resources/font/arial.ttf"))
 	{
 		return false;
 	}
@@ -76,6 +80,11 @@ void Game::InitializeGame()
 	backgroundShape.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 2.f));
 	backgroundShape.setPosition(sf::Vector2f{ (float)screenWidth / 2, (float)screenHeight / 2 });
 	backgroundShape.setRotation(90.0f);
+
+	// Score Text
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(24);
+	scoreText.setFillColor(sf::Color::White);
 }
 
 void Game::ProcessInput()
@@ -136,6 +145,7 @@ void Game::CheckCollision()
 				{
 					actors[i]->SetIsActive(false);
 					actors[j]->SetIsActive(false);
+					score++;
 				}
 			}
 
@@ -150,11 +160,15 @@ void Game::DrawGame()
 		// draw backgrounds
 		window.draw(backgroundShape);
 
-
+		// draw actors
 		for (int i = 0; i < actors.size(); i++)
 		{
 			actors[i]->Draw(window);
 		}
+
+		// draw score
+		scoreText.setString("Score : " + std::to_string(score));
+		window.draw(scoreText);
 	}
 	window.display();
 }
