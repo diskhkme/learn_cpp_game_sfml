@@ -10,6 +10,7 @@
 
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "Player.h"
 #include "Enemy.h"
 
@@ -29,14 +30,14 @@ int main()
         Player player = Player{ sf::Vector2f{10.0f, 10.0f}, 20.0f, sf::Color{238,108,77,255}, 2.0f };
 
         // Enemies
-        const int enemyCount = 10;
-        Enemy* enemies = new Enemy[enemyCount];
+        std::vector<Enemy*> enemies;
+        enemies.clear();
         const sf::Color enemyColor = sf::Color{ 200, 150, 255, 255 };
 
-        for (int i = 0; i < enemyCount; i++)
+        for (int i = 0; i < 10; i++)
         {
             sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-            enemies[i] = Enemy{ enemyInitPosition , 10.0f, enemyColor, 1.0f, &player };
+            enemies.emplace_back(new Enemy{ enemyInitPosition , 10.0f, enemyColor, 1.0f, &player });
         }
 
         while (window.isOpen())
@@ -50,9 +51,9 @@ int main()
 
             // Logic Update
             player.Update();
-            for (int i = 0; i < enemyCount; i++)
+            for (int i = 0; i < enemies.size(); i++)
             {
-                enemies[i].Update();
+                enemies[i]->Update();
             }
 
             // Draw Objects
@@ -60,16 +61,21 @@ int main()
             {
                 player.Draw(window);
 
-                for (int i = 0; i < enemyCount; i++)
+                for (int i = 0; i < enemies.size(); i++)
                 {
-                    enemies[i].Draw(window);
+                    enemies[i]->Draw(window);
                 }
 
             }
             window.display();
         }
 
-        delete[] enemies;
+        // Delete
+        for (int i = 0; i < enemies.size(); i++)
+        {
+            delete enemies[i];
+        }
+
     }
 
     return 0;
