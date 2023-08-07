@@ -28,7 +28,7 @@ int main()
         window.setFramerateLimit(60);
 
         // Player
-        Player player = Player{ sf::Vector2f{10.0f, 10.0f}, 20.0f, sf::Color{238,108,77,255}, 2.0f };
+        Player player = Player{ sf::Vector2f{10.0f, 10.0f}, 20.0f, sf::Color{238,108,77,255}, 200.0f };
 
         // Enemies
         std::vector<Enemy*> enemies;
@@ -38,19 +38,17 @@ int main()
         for (int i = 0; i < 10; i++)
         {
             sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-            enemies.emplace_back(new Enemy{ enemyInitPosition , 10.0f, enemyColor, 1.0f, &player });
+            enemies.emplace_back(new Enemy{ enemyInitPosition , 10.0f, enemyColor, 100.0f, &player });
         }
 
         // Bullets
         std::vector<Bullet*> bullets;
         bullets.clear();
         const sf::Color bulletColor = sf::Color{ 0, 255, 0, 255 };
-        for (int i = 0; i < 10; i++)
-        {
-            sf::Vector2f enemyInitPosition = sf::Vector2f{ (float)(screenWidth - 100) , (float)(rand() % screenHeight) };
-            bullets.emplace_back(new Bullet{ player.getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  10.0f });
-        }
+        float bulletFirePeriod = 1.0f;
+        float bulletFireTimer = bulletFirePeriod;
 
+        sf::Clock deltaClock;
         while (window.isOpen())
         {
             sf::Event event;
@@ -59,16 +57,26 @@ int main()
                 if (event.type == sf::Event::Closed)
                     window.close();
             }
+            float dt = deltaClock.restart().asSeconds();
 
             // Logic Update
-            player.Update();
+
+            // Fire bullet
+            bulletFireTimer -= dt;
+            if (bulletFireTimer < 0.0f)
+            {
+                bulletFireTimer = bulletFirePeriod;
+                bullets.emplace_back(new Bullet{ player.getPosition(), sf::Vector2f{1.0f, 0.0f}, 3.0f, bulletColor,  500.0f });
+            }
+
+            player.Update(dt);
             for (int i = 0; i < enemies.size(); i++)
             {
-                enemies[i]->Update();
+                enemies[i]->Update(dt);
             }
             for (int i = 0; i < bullets.size(); i++)
             {
-                bullets[i]->Update();
+                bullets[i]->Update(dt);
             }
 
             // Draw Objects

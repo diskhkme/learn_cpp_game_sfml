@@ -8,9 +8,9 @@ Player::Player(const sf::Vector2f pos, float size, sf::Color color, float speed)
 	shape.setFillColor(color);
 }
 
-void Player::Update()
+void Player::Update(float dt)
 {
-	ProcessInput();
+	ProcessInput(dt);
 	shape.setPosition(position);
 }
 
@@ -20,23 +20,23 @@ void Player::Draw(sf::RenderWindow& window)
 }
 
 
-void Player::ProcessInput()
+void Player::ProcessInput(float dt)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		position.x -= speed;
+		position.x -= speed * dt;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		position.x += speed;
+		position.x += speed * dt;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		position.y -= speed;
+		position.y -= speed * dt;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		position.y += speed;
+		position.y += speed * dt;
 	}
 }
 
