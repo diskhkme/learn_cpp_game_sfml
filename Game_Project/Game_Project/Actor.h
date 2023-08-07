@@ -24,6 +24,7 @@ public:
 	ActorType GetActorType() const { return type; }
 
 	bool GetIsActive() const { return isActive; }
+	void SetIsActive(bool b) { isActive = b; }
 
 protected:
 	Game* game;

@@ -24,8 +24,11 @@ Enemy::~Enemy()
 
 void Enemy::Update(float dt)
 {
-	UpdatePosition(dt);
-	shape.setPosition(position);
+	if (isActive)
+	{
+		UpdatePosition(dt);
+		shape.setPosition(position);
+	}
 }
 
 void Enemy::UpdatePosition(float dt)

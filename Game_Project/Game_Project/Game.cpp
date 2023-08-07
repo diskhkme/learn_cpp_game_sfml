@@ -80,18 +80,54 @@ void Game::UpdateGame()
 	float dt = deltaClock.restart().asSeconds();
 
 	// Logic Update
-	bulletFireTimer -= dt;
-	if (bulletFireTimer < 0.0f)
-	{
-		bulletFireTimer = bulletFirePeriod;
-		actors.emplace_back(new Bullet{ this, ActorType::BULLET, 3.0f,  500.0f });
-	}
+	SpawnBullet(dt);
 
 	for (int i = 0; i < actors.size(); i++)
 	{
 		actors[i]->Update(dt);
 	}
 
+	CheckCollision();
+
+}
+
+void Game::SpawnBullet(float dt)
+{
+	bulletFireTimer -= dt;
+	if (bulletFireTimer < 0.0f)
+	{
+		bulletFireTimer = bulletFirePeriod;
+		actors.emplace_back(new Bullet{ this, ActorType::BULLET, 3.0f,  500.0f });
+	}
+}
+
+void Game::CheckCollision()
+{
+	// Bullet - Enemy Collision
+	for (int i = 0; i < actors.size(); i++)
+	{
+		for (int j = 0; j < actors.size(); j++)
+		{
+			if (actors[i]->GetIsActive() == false || actors[j]->GetIsActive() == false)
+				continue;
+
+			if (actors[i]->GetActorType() == ActorType::BULLET && actors[j]->GetActorType() == ActorType::ENEMY)
+			{
+				sf::Vector2f bulletPos = actors[i]->getPosition();
+				sf::Vector2f enemyPos = actors[j]->getPosition();
+
+				sf::Vector2f bulletToEnemyPos = bulletPos - enemyPos;
+				float dist = sqrt(bulletToEnemyPos.x * bulletToEnemyPos.x + bulletToEnemyPos.y * bulletToEnemyPos.y);
+
+				if (dist < 5.0f)
+				{
+					actors[i]->SetIsActive(false);
+					actors[j]->SetIsActive(false);
+				}
+			}
+
+		}
+	}
 }
 
 void Game::DrawGame()

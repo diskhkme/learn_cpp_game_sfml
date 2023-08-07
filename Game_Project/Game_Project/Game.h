@@ -29,6 +29,8 @@ private:
 	void ProcessInput();
 
 	void UpdateGame();
+	void SpawnBullet(float dt);
+	void CheckCollision();
 
 	void DrawGame();
 

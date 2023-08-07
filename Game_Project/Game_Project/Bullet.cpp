@@ -27,8 +27,12 @@ Bullet::~Bullet()
 
 void Bullet::Update(float dt)
 {
-	UpdatePosition(dt);
-	shape.setPosition(position);
+	if (isActive)
+	{
+		UpdatePosition(dt);
+		shape.setPosition(position);
+	}
+	
 }
 
 void Bullet::UpdatePosition(float dt)
@@ -49,7 +53,7 @@ sf::Vector2f Bullet::GetPlayerToClosestEnemyVector()
 
 	for (int i = 0; i < actors.size(); i++)
 	{
-		if (actors[i]->GetActorType() != ActorType::ENEMY)
+		if (actors[i]->GetActorType() != ActorType::ENEMY || actors[i]->GetIsActive() == false)
 			continue;
 
 		sf::Vector2f enemyPos = actors[i]->getPosition();

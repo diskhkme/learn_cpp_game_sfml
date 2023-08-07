@@ -11,5 +11,8 @@ Actor::~Actor()
 
 void Actor::Draw(sf::RenderWindow& window)
 {
-	window.draw(shape);
+	if (isActive)
+	{
+		window.draw(shape);
+	}
 }
