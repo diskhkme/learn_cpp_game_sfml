@@ -61,5 +61,8 @@ private:
 	int score;
 	sf::Text scoreText;
 
+	bool gameOver;
+	sf::Text gameOverText;
+
 	sf::Clock deltaClock;
 };

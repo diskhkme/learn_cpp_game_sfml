@@ -6,7 +6,7 @@
 #include "EnemySpawner.h"
 
 Game::Game()
-	: player{ nullptr }, bulletFirePeriod{0.0}, bulletFireTimer{0.0}, score{0}
+	: player{ nullptr }, bulletFirePeriod{ 0.0 }, bulletFireTimer{ 0.0 }, score{ 0 }, gameOver{ false }
 {
 	actors.clear();
 }
@@ -55,6 +55,8 @@ void Game::Shutdown()
 	}
 
 	delete enemySpawner;
+
+	actors.clear();
 }
 
 void Game::InitializeGame()
@@ -85,6 +87,11 @@ void Game::InitializeGame()
 	scoreText.setFont(font);
 	scoreText.setCharacterSize(24);
 	scoreText.setFillColor(sf::Color::White);
+
+	// GameOver Text
+	gameOverText.setFont(font);
+	gameOverText.setCharacterSize(48);
+	gameOverText.setFillColor(sf::Color::White);
 }
 
 void Game::ProcessInput()
@@ -94,6 +101,16 @@ void Game::ProcessInput()
 	{
 		if (event.type == sf::Event::Closed)
 			window.close();
+
+		if (gameOver && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R)
+		{
+			gameOver = false;
+			score = 0;
+
+			Shutdown();
+			InitializeGame();
+			
+		}
 	}
 }
 
@@ -102,15 +119,19 @@ void Game::UpdateGame()
 	float dt = deltaClock.restart().asSeconds();
 
 	// Logic Update
-	SpawnBullet(dt);
-	enemySpawner->Update(dt);
-
-	for (int i = 0; i < actors.size(); i++)
+	if (!gameOver)
 	{
-		actors[i]->Update(dt);
-	}
+		SpawnBullet(dt);
+		enemySpawner->Update(dt);
 
-	CheckCollision();
+		for (int i = 0; i < actors.size(); i++)
+		{
+			actors[i]->Update(dt);
+		}
+
+		CheckCollision();
+	}
+	
 
 }
 
@@ -152,6 +173,27 @@ void Game::CheckCollision()
 
 		}
 	}
+
+	// Player - Enemy Collision
+	for (int i = 0; i < actors.size(); i++)
+	{
+		if (actors[i]->GetIsActive() == false)
+			continue;
+
+		if (actors[i]->GetActorType() == ActorType::ENEMY)
+		{
+			sf::Vector2f playerPos = player->getPosition();
+			sf::Vector2f enemyPos = actors[i]->getPosition();
+
+			sf::Vector2f enemyToPlayerPos = enemyPos - playerPos;
+			float dist = sqrt(enemyToPlayerPos.x * enemyToPlayerPos.x + enemyToPlayerPos.y * enemyToPlayerPos.y);
+
+			if (dist < 5.0f)
+			{
+				gameOver = true;
+			}
+		}
+	}
 }
 
 void Game::DrawGame()
@@ -170,6 +212,12 @@ void Game::DrawGame()
 		// draw score
 		scoreText.setString("Score : " + std::to_string(score));
 		window.draw(scoreText);
+
+		if (gameOver)
+		{
+			gameOverText.setString("Game Over\n Press R to restart the game");
+			window.draw(gameOverText);
+		}
 	}
 	window.display();
 }
