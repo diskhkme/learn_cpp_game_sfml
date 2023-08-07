@@ -2,8 +2,8 @@
 #include "Enemy.h"
 #include "Player.h"
 
-Enemy::Enemy(Game* game, const sf::Vector2f pos, float size, float speed) // dependency injection
-	: Actor{ game, pos, speed, size }
+Enemy::Enemy(Game* game, ActorType type, const sf::Vector2f pos, float size, float speed) // dependency injection
+	: Actor{ game, type, pos, speed, size }
 {
 	shape.setTexture(this->game->GetShipTexture());
 	shape.setTextureRect(sf::IntRect{ 40,0,8,8 });
@@ -14,7 +14,7 @@ Enemy::Enemy(Game* game, const sf::Vector2f pos, float size, float speed) // dep
 }
 
 Enemy::Enemy()
-	: Enemy{nullptr, sf::Vector2f{0,0}, 1.0f, 1.0f }
+	: Enemy{nullptr, ActorType::ENEMY, sf::Vector2f{0,0}, 1.0f, 1.0f }
 {}
 
 Enemy::~Enemy()

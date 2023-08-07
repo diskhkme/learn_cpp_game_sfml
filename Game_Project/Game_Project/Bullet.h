@@ -8,7 +8,7 @@ class Game;
 class Bullet : public Actor
 {
 public:
-    Bullet(Game* game, float size, float speed);
+    Bullet(Game* game, ActorType type, float size, float speed);
 
     Bullet();
 

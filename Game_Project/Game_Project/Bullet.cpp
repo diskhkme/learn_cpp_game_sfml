@@ -4,8 +4,8 @@
 #include "Enemy.h"
 
 
-Bullet::Bullet(Game* game, float size, float speed)
-	: Actor{ game, game->GetPlayer()->getPosition(), speed, size }
+Bullet::Bullet(Game* game, ActorType type, float size, float speed)
+	: Actor{ game, type, game->GetPlayer()->getPosition(), speed, size }
 {
 	direction = GetPlayerToClosestEnemyVector();
 
@@ -18,7 +18,7 @@ Bullet::Bullet(Game* game, float size, float speed)
 }
 
 Bullet::Bullet()
-	: Bullet{nullptr, 0.3f, 5.0f }
+	: Bullet{nullptr, ActorType::BULLET, 0.3f, 5.0f }
 {}
 
 Bullet::~Bullet()
@@ -40,16 +40,19 @@ void Bullet::UpdatePosition(float dt)
 sf::Vector2f Bullet::GetPlayerToClosestEnemyVector()
 {
 	Player* player = this->game->GetPlayer();
-	std::vector<Enemy*> enemies = this->game->GetEnemies();
+	std::vector<Actor*> actors = this->game->GetActors();
 
 	sf::Vector2f playerPos = player->getPosition();
 
 	float minDist = 10000.0f;
 	sf::Vector2f minDistVec = sf::Vector2f{ 1.0f, 0.0f };
 
-	for (int i = 0; i < enemies.size(); i++)
+	for (int i = 0; i < actors.size(); i++)
 	{
-		sf::Vector2f enemyPos = enemies[i]->getPosition();
+		if (actors[i]->GetActorType() != ActorType::ENEMY)
+			continue;
+
+		sf::Vector2f enemyPos = actors[i]->getPosition();
 		
 		sf::Vector2f playerToEnemyVec = enemyPos - playerPos;
 		float dist = sqrt(playerToEnemyVec.x * playerToEnemyVec.x + playerToEnemyVec.y * playerToEnemyVec.y);

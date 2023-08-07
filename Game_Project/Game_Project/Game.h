@@ -18,8 +18,7 @@ public:
 	void Shutdown();
 
 	Player* GetPlayer() { return player; }
-	std::vector<Enemy*> GetEnemies() { return enemies; }
-	std::vector<Bullet*> GetBullets() { return bullets; }
+	std::vector<Actor*> GetActors() { return actors; }
 
 	sf::Texture& GetShipTexture() { return shipsTexture; }
 	sf::Texture& GetProjectileTexture() { return projectilTexture; }
@@ -41,8 +40,6 @@ private:
 	std::vector<Actor*> actors;
 	
 	Player* player;
-	std::vector<Enemy*> enemies; // 사용해야 할까?
-	std::vector<Bullet*> bullets; // 사용해야 할까?
 
 	sf::Texture shipsTexture;
 	sf::Texture projectilTexture;
